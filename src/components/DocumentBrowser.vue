@@ -1,6 +1,6 @@
 <template>
   <div>
-    <object-view v-if="doc" :data="doc" :caption="this.doc['$type']"></object-view>
+    <object-view v-if="doc" :data="doc" :caption="this.doc['$type']" searchable></object-view>
   </div>
 </template>
 

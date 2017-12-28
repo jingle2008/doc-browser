@@ -2,7 +2,6 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
-import VueMoment from 'vue-moment';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -12,7 +11,6 @@ import router from './router';
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
-Vue.use(VueMoment);
 
 Raven.config('https://16709c822446413383f1ec0de9dd803f@sentry.io/263631')
   .addPlugin(RavenVue, Vue)

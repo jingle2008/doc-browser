@@ -46,5 +46,26 @@ export default {
     isSymbol(value) {
       return typeof value === 'symbol';
     },
+    isArray(value) {
+      return Array.isArray(value);
+    },
+    guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+      }
+      return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+    },
+    isLocalized(value) {
+      return !!this.getEnglishString(value);
+    },
+    getEnglishString(value) {
+      if (!this.isObject(value)) {
+        return null;
+      }
+
+      return value.en || value['en-US'];
+    },
   },
 };
