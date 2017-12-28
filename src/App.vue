@@ -3,7 +3,7 @@
     <b-container fluid>
       <b-navbar toggleable="md" type="dark" variant="dark" fixed="top">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="/">Portal</b-navbar-brand>
+        <b-navbar-brand href="/"><icon name="bomb" scale="2"></icon></b-navbar-brand>
         <b-collapse is-nav id="nav_collapse">
           <b-navbar-nav>
             <b-nav-item to="docview">Document Browser</b-nav-item>
@@ -24,8 +24,14 @@
 </template>
 
 <script>
+import 'vue-awesome/icons/bomb';
+import Icon from 'vue-awesome/components/Icon';
+
 export default {
   name: 'app',
+  components: {
+    Icon,
+  },
 };
 </script>
 
