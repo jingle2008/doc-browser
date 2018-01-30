@@ -14,10 +14,13 @@ export default {
       }
     },
     isNumber(value) {
-      return typeof value === 'number' && isFinite(value);
+      return typeof value === 'number'
+        && isFinite(value);
     },
     isObject(value) {
-      return value && typeof value === 'object' && value.constructor === Object;
+      return value
+        && typeof value === 'object'
+        && value.constructor === Object;
     },
     isDate(value) {
       return value instanceof Date;
@@ -29,7 +32,8 @@ export default {
       return typeof value === 'undefined';
     },
     isString(value) {
-      return typeof value === 'string' || value instanceof String;
+      return typeof value === 'string'
+        || value instanceof String;
     },
     isFunction(value) {
       return typeof value === 'function';
@@ -38,10 +42,13 @@ export default {
       return typeof value === 'boolean';
     },
     isRegExp(value) {
-      return value && typeof value === 'object' && value.constructor === RegExp;
+      return value
+        && typeof value === 'object'
+        && value.constructor === RegExp;
     },
     isError(value) {
-      return value instanceof Error && typeof value.message !== 'undefined';
+      return value instanceof Error
+        && typeof value.message !== 'undefined';
     },
     isSymbol(value) {
       return typeof value === 'symbol';

@@ -1,5 +1,7 @@
 <template>
-    <b-form-checkbox :checked="data" disabled>{{ data ? "Yes" : "No" }}</b-form-checkbox>
+    <b-form-checkbox :checked="data" disabled>
+      {{ data ? "Yes" : "No" }}
+    </b-form-checkbox>
 </template>
 
 <script>

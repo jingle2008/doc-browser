@@ -1,8 +1,14 @@
 <template>
-  <span v-if="isNull(data)" class="font-italic">[Unset]</span>
-  <boolean-view v-else-if="isBoolean(data)" :data="data"></boolean-view>
-  <span v-else-if="isEmpty(data)" class="font-italic">[Empty]</span>
-  <localized-view v-else-if="isLocalized(data)" :data="data"></localized-view>
+  <span v-if="isNull(data)" class="font-italic">
+    [Unset]
+  </span>
+  <boolean-view v-else-if="isBoolean(data)" :data="data">
+  </boolean-view>
+  <span v-else-if="isEmpty(data)" class="font-italic">
+    [Empty]
+  </span>
+  <localized-view v-else-if="isLocalized(data)" :data="data">
+  </localized-view>
   <collapse-view v-else-if="isObject(data)">
     <object-view :data="data"></object-view>
   </collapse-view>
@@ -28,16 +34,21 @@ export default {
   },
   methods: {
     isEmptyArray(value) {
-      return Array.isArray(value) && value.length === 0;
+      return Array.isArray(value)
+        && value.length === 0;
     },
     isEmptyObject(value) {
-      return this.isObject(value) && Object.keys(value).length === 0;
+      return this.isObject(value)
+        && Object.keys(value).length === 0;
     },
     isEmptyString(value) {
-      return this.isString(value) && value.length === 0;
+      return this.isString(value)
+        && value.length === 0;
     },
     isEmpty(value) {
-      return this.isEmptyArray(value) || this.isEmptyObject(value) || this.isEmptyString(value);
+      return this.isEmptyArray(value)
+        || this.isEmptyObject(value)
+        || this.isEmptyString(value);
     },
   },
   beforeCreate() {

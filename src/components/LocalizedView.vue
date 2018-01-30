@@ -3,9 +3,15 @@
     <a href="#" @click.prevent v-b-modal="id">
       <icon name="globe" scale="2"></icon>
     </a>
-    <b-badge pill>{{ Object.keys(data).length }}</b-badge>
+    <b-badge pill>
+      {{ Object.keys(data).length }}
+    </b-badge>
     {{ getEnglishString(data) }}
-    <b-modal :id="id" size="lg" lazy title="Localized Values"
+    <b-modal
+      :id="id"
+      size="lg"
+      lazy
+      title="Localized Values"
       header-bg-variant="dark"
       header-text-variant="light"
       footer-bg-variant="dark"

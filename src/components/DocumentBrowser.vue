@@ -21,7 +21,7 @@ export default {
     };
   },
   created() {
-    fetch('https://api.myjson.com/bins/912tz')
+    fetch('https://api.myjson.com/bins/18nc6b')
       .then(response => response.json())
       .then((json) => {
         this.doc = json;
