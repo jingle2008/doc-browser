@@ -1,10 +1,10 @@
 <template>
-    <div>
-      <b-btn v-b-toggle="id" variant="secondary" class="sm mb-1">Show/Hide</b-btn>
-      <b-collapse visible :id="id">
-        <slot></slot>
-      </b-collapse>
-    </div>
+  <div>
+    <b-btn v-b-toggle="id" variant="secondary" class="sm mb-1">Show/Hide</b-btn>
+    <b-collapse :id="id">
+      <slot></slot>
+    </b-collapse>
+  </div>
 </template>
 
 <script>

@@ -1,27 +1,43 @@
 <template>
-  <b-table :items="items" :fields="fields" :filter="filter" bordered caption-top head-variant="light">
-    <template slot="table-caption">
-      <h4 v-if="caption">{{ caption }}</h4>
-      <b-row v-if="searchable">
-        <b-col md="auto">
+  <div>
+    <b-row v-if="complex">
+      <b-col md="4" class="my-1">
+        <b-form-group horizontal label="Filter" class="mb-0">
           <b-input-group>
-            <b-form-input v-model="keyword" placeholder="Type to Search" autofocus />
+            <b-form-input v-model="keyword" placeholder="Type to Search" />
             <b-input-group-button>
               <b-btn :disabled="!keyword" @click="keyword = ''">Clear</b-btn>
             </b-input-group-button>
           </b-input-group>
-        </b-col>
-      </b-row>
-    </template>
-    <template slot="property" slot-scope="data">
-      <span class="text-capitalize">
-        {{ data.value }}
-      </span>
-    </template>
-    <template slot="value" slot-scope="data">
-      <any-view :data="data.value"></any-view>
-    </template>
-  </b-table>
+        </b-form-group>
+      </b-col>
+      <b-col md="3" offset-md="1" class="my-1">
+        <b-pagination align="center" :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+      </b-col>
+      <b-col md="3" offset-md="1" class="my-1">
+        <b-form-group horizontal label="Page Size" label-cols="6" class="mb-0">
+          <b-form-select :options="pageOptions" v-model="perPage" />
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-table :items="items" :fields="fields" :filter="filter" bordered caption-top head-variant="light"
+      :current-page="currentPage" :per-page="complex ? perPage : 0" show-empty @filtered="onFiltered">
+      <template slot="table-caption">
+        <h4 v-if="caption">{{ caption }}</h4>
+      </template>
+      <template slot="table-colgroup">
+        <col span="1" class="bg-light">
+      </template>
+      <template slot="property" slot-scope="data">
+        <span class="text-capitalize">
+          {{ data.value }}
+        </span>
+      </template>
+      <template slot="value" slot-scope="data">
+        <any-view :data="data.value"></any-view>
+      </template>
+    </b-table>
+  </div>
 </template>
 
 <script>
@@ -38,10 +54,6 @@ export default {
     caption: {
       type: String,
     },
-    searchable: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
@@ -50,12 +62,11 @@ export default {
         { key: 'property', thClass: 'col-auto', sortable: true },
         { key: 'value', thClass: 'col-10' },
       ],
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [5, 10, 15, 25, 50, 100],
+      totalRows: 0,
     };
-  },
-  filters: {
-    capitalize(value) {
-      return value[0].toUpperCase() + value.slice(1);
-    },
   },
   beforeCreate() {
     this.$options.components.AnyView = AnyView;
@@ -63,6 +74,10 @@ export default {
   methods: {
     filter(item) {
       return this.keyword ? item.property.toLowerCase().includes(this.keyword.toLowerCase()) : true;
+    },
+    onFiltered(filteredItems) {
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
     },
   },
   computed: {
@@ -72,6 +87,9 @@ export default {
     items() {
       return this.keys
         .map(key => ({ property: key, value: this.data[key] }));
+    },
+    complex() {
+      return this.items.length >= 20;
     },
   },
   mixins: [mixins],

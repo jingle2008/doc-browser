@@ -5,8 +5,12 @@
     </a>
     <b-badge pill>{{ Object.keys(data).length }}</b-badge>
     {{ getEnglishString(data) }}
-    <b-modal :id="id" title="Localized Values">
-      <object-view :data="data" searchable></object-view>
+    <b-modal :id="id" size="lg" lazy title="Localized Values"
+      header-bg-variant="dark"
+      header-text-variant="light"
+      footer-bg-variant="dark"
+      footer-text-variant="light">
+      <object-view :data="data"></object-view>
     </b-modal>
   </div>
 </template>
@@ -23,12 +27,6 @@ export default {
     data: {
       type: Object,
       required: true,
-    },
-  },
-  methods: {
-    isSimpleArray(value) {
-      return value.every(item =>
-        this.isPrimitive(item) || this.isString(item) || this.isDate(item));
     },
   },
   computed: {

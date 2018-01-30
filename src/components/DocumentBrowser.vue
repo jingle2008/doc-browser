@@ -1,6 +1,6 @@
 <template>
   <div>
-    <object-view v-if="doc" :data="doc" :caption="this.doc['$type']" searchable></object-view>
+    <object-view v-if="doc" :data="doc"></object-view>
     <spinner v-else size="big" message="Loading..."></spinner>
   </div>
 </template>
