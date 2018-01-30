@@ -3,18 +3,16 @@
     <b-container fluid>
       <b-navbar toggleable="md" type="dark" variant="dark" fixed="top">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="/"><icon name="bomb" scale="2"></icon></b-navbar-brand>
+        <b-navbar-brand href="/">
+          <icon name="bomb" scale="2"></icon>Document Browser
+        </b-navbar-brand>
         <b-collapse is-nav id="nav_collapse">
-          <b-navbar-nav>
-            <b-nav-item to="docview">Document Browser</b-nav-item>
-            <b-nav-item href="#" disabled>Modern Pricing</b-nav-item>
-          </b-navbar-nav>
-          <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <b-nav-form>
-              <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search keywords..."/>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-            </b-nav-form>
+            <b-nav-item
+              href="https://github.com/jingle2008/doc-browser"
+              target="_blank">
+              <icon name="github" scale="2"></icon>
+            </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -25,6 +23,7 @@
 
 <script>
 import 'vue-awesome/icons/bomb';
+import 'vue-awesome/icons/github';
 import Icon from 'vue-awesome/components/Icon';
 
 export default {
