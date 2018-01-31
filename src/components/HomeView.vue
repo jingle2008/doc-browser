@@ -2,12 +2,30 @@
   <b-card no-body>
     <b-tabs card>
       <b-tab title="From Json String" active>
+        <b-input-group class="mb-2">
+          <b-form-file
+            ref="fileinput"
+            v-model="file"
+            placeholder="Choose a json file..."
+            @input="loadFile"
+            accept=".json">
+          </b-form-file>
+          <b-input-group-append>
+            <b-btn
+              :disabled="!file"
+              variant="secondary"
+              @click="clearFile">
+              Reset
+            </b-btn>
+          </b-input-group-append>
+        </b-input-group>
         <b-form-textarea 
-          v-model="text"
+          v-model="json"
           placeholder="Enter your valid json data here."
           @input="validateJson"
           :state="state"
-          :rows="25">
+          :rows="25"
+          :max-rows="25">
         </b-form-textarea>
         <b-form-text>{{ error }}</b-form-text>
         <b-card-footer>
@@ -35,9 +53,10 @@ export default {
   data() {
     return {
       msg: 'Welcome to Your Vue.js App',
-      text: '',
+      json: '',
       error: '',
       state: null,
+      file: null,
     };
   },
   methods: {
@@ -58,13 +77,21 @@ export default {
     getJson(text) {
       return this.state ? JSON.parse(text) : null;
     },
+    clearFile() {
+      this.$refs.fileinput.reset();
+    },
+    loadFile() {
+      const reader = new FileReader();
+      reader.onload = (e) => { this.json = e.target.result; };
+      reader.readAsText(this.file);
+    },
   },
   computed: {
     targetForString() {
       return {
         name: 'DocumentView',
         params: {
-          json: this.getJson(this.text),
+          json: this.getJson(this.json),
         },
       };
     },
