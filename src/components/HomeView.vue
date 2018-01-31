@@ -25,7 +25,10 @@
           @input="validateJson"
           :state="state"
           :rows="25"
-          :max-rows="25">
+          :max-rows="25"
+          @dragenter.native.stop.prevent
+          @dragover.native.stop.prevent
+          @drop.native.stop.prevent="drop">
         </b-form-textarea>
         <b-form-text>{{ error }}</b-form-text>
         <b-card-footer>
@@ -80,10 +83,13 @@ export default {
     clearFile() {
       this.$refs.fileinput.reset();
     },
-    loadFile() {
+    loadFile(value) {
       const reader = new FileReader();
       reader.onload = (e) => { this.json = e.target.result; };
-      reader.readAsText(this.file);
+      reader.readAsText(value);
+    },
+    drop(e) {
+      this.loadFile(e.dataTransfer.files[0]);
     },
   },
   computed: {
