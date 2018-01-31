@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HelloWorld from '@/components/HelloWorld';
-import DocumentBrowser from '@/components/DocumentBrowser';
+import HomeView from '@/components/HomeView';
+import DocumentView from '@/components/DocumentView';
 
 Vue.use(Router);
 
@@ -9,13 +9,14 @@ export default new Router({
   routes: [
     {
       path: '/docview',
-      name: 'DocumentBrowser',
-      component: DocumentBrowser,
+      name: 'DocumentView',
+      component: DocumentView,
+      props: true,
     },
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      name: 'HomeView',
+      component: HomeView,
     },
   ],
 });
