@@ -1,26 +1,6 @@
 <template>
   <b-row>
-    <b-col md="4" sm="6" class="my-1">
-      <b-form-group
-        horizontal
-        label="Filter"
-        class="mb-0">
-        <b-input-group>
-          <b-form-input
-            :value="keyword"
-            @input="changeKeyword"
-            placeholder="Type to Search" />
-          <b-input-group-button>
-            <b-btn
-              :disabled="!keyword"
-              @click="changeKeyword('')">
-              Clear
-            </b-btn>
-          </b-input-group-button>
-        </b-input-group>
-      </b-form-group>
-    </b-col>
-    <b-col md="4" sm="6" class="my-1">
+    <b-col sm="12" md="6" class="mb-2">
       <b-pagination
         :total-rows="total"
         :per-page="pageSize"
@@ -28,27 +8,31 @@
         @input="changeCurrent"
         class="my-0" />
     </b-col>
-    <b-col md="2" sm="6" class="my-1">
-      <label class="my-2">
-        Showing {{ start }}-{{ end }} of {{ total }}
-      </label>
-    </b-col>
-    <b-col md="2" sm="6" class="my-1">
-      <b-form-group
-        horizontal
-        label="Page Size"
-        label-cols="6"
-        class="mb-0">
-        <b-form-select
-          :options="pageSizes"
-          :value="pageSize"
-          @input="changePageSize" />
-      </b-form-group>
+    <b-col sm="12" md="6" class="mb-2">
+      <b-input-group>
+        <b-input-group-prepend is-text>
+          <icon name="search" scale="1.5"></icon>
+        </b-input-group-prepend>
+        <b-form-input
+          :value="keyword"
+          @input="changeKeyword"
+          placeholder="Type to Search" />
+        <b-input-group-append>
+          <b-btn
+            :disabled="!keyword"
+            @click="changeKeyword('')">
+            Clear
+          </b-btn>
+        </b-input-group-append>
+      </b-input-group>
     </b-col>
   </b-row>
 </template>
 
 <script>
+import 'vue-awesome/icons/search';
+import Icon from 'vue-awesome/components/Icon';
+
 export default {
   name: 'FilterView',
   props: {
@@ -68,12 +52,6 @@ export default {
       type: Number,
       required: true,
     },
-    pageSizes: {
-      type: Array,
-      default() {
-        return [5, 10, 15, 25, 50, 100];
-      },
-    },
   },
   methods: {
     changeKeyword(value) {
@@ -82,17 +60,9 @@ export default {
     changeCurrent(value) {
       this.$emit('update:current', value);
     },
-    changePageSize(value) {
-      this.$emit('update:pageSize', value);
-    },
   },
-  computed: {
-    start() {
-      return ((this.current - 1) * this.pageSize) + 1;
-    },
-    end() {
-      return Math.min(this.current * this.pageSize, this.total);
-    },
+  components: {
+    Icon,
   },
 };
 </script>

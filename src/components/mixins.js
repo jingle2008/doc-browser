@@ -1,3 +1,5 @@
+import locales from './locales';
+
 export default {
   methods: {
     isPrimitive(value) {
@@ -65,10 +67,16 @@ export default {
       return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
     },
     isLocalized(value) {
-      return !!this.getEnglishString(value);
+      if (!this.isObject(value)) {
+        return false;
+      }
+
+      const keys = Object.keys(value);
+      return keys.length
+        && keys.every(key => locales.includes(key));
     },
     getEnglishString(value) {
-      if (!this.isObject(value)) {
+      if (!this.isLocalized(value)) {
         return null;
       }
 

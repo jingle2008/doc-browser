@@ -1,69 +1,61 @@
 <template>
-  <b-card no-body>
-    <b-tabs card>
-      <b-tab title="From Json String" active>
-        <b-input-group class="mb-2">
-          <b-form-file
-            ref="fileinput"
-            v-model="file"
-            placeholder="Choose a json file..."
-            @input="loadFile"
-            accept=".json">
-          </b-form-file>
-          <b-input-group-append>
-            <b-btn
-              :disabled="!file"
-              variant="secondary"
-              @click="clearFile">
-              Reset
-            </b-btn>
-          </b-input-group-append>
-        </b-input-group>
-        <b-form-textarea 
-          v-model="json"
-          placeholder="Enter your valid json data here."
-          @input="validateJson"
-          :state="state"
-          :rows="25"
-          :max-rows="25"
-          @dragenter.native.stop.prevent
-          @dragover.native.stop.prevent
-          @drop.native.stop.prevent="drop">
-        </b-form-textarea>
-        <b-form-text>{{ error }}</b-form-text>
-        <b-card-footer>
-          <b-button
-            :disabled="!state"
-            :to="targetForString"
-            variant="primary">
-            Show in Browser
-          </b-button>
-        </b-card-footer>
-      </b-tab>
-      <b-tab title="From Remote Source">
-        Tab Contents 2
-        <b-card-footer>
-          <b-button href="#" variant="primary">Show in Browser</b-button>
-        </b-card-footer>
-      </b-tab>
-    </b-tabs>
-  </b-card>
+  <div>
+    <collapse-view header="Source Panel" visible>
+      <b-input-group class="mb-2">
+        <b-form-file
+          ref="fileinput"
+          v-model="file"
+          placeholder="Choose a json file..."
+          @input="loadFile"
+          accept=".json">
+        </b-form-file>
+        <b-input-group-append>
+          <b-btn
+            :disabled="!file"
+            variant="secondary"
+            @click="clearFile">
+            Reset
+          </b-btn>
+        </b-input-group-append>
+      </b-input-group>
+      <b-form-textarea
+        v-model="text"
+        placeholder="Enter your valid json data here."
+        @input="validateText"
+        :state="state"
+        :rows="10"
+        :max-rows="25"
+        @dragenter.native.stop.prevent
+        @dragover.native.stop.prevent
+        @drop.native.stop.prevent="drop">
+      </b-form-textarea>
+      <b-form-text>{{ error }}</b-form-text>
+    </collapse-view>
+    <collapse-view header="Viewer Panel" visible>
+      <any-view :data="json"></any-view>
+    </collapse-view>
+  </div>
 </template>
 
 <script>
+import 'vue-awesome/icons/chevron-circle-down';
+import 'vue-awesome/icons/chevron-circle-right';
+import Icon from 'vue-awesome/components/Icon';
+import AnyView from './AnyView';
+import CollapseView from './CollapseView';
+
 export default {
   name: 'HomeView',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      json: '',
+      text: '',
       error: '',
       state: null,
       file: null,
     };
   },
   methods: {
-    validateJson(value) {
+    validateText(value) {
       try {
         if (value) {
           JSON.parse(value);
@@ -77,15 +69,12 @@ export default {
         this.error = error.message;
       }
     },
-    getJson(text) {
-      return this.state ? JSON.parse(text) : null;
-    },
     clearFile() {
       this.$refs.fileinput.reset();
     },
     loadFile(value) {
       const reader = new FileReader();
-      reader.onload = (e) => { this.json = e.target.result; };
+      reader.onload = (e) => { this.text = e.target.result; };
       reader.readAsText(value);
     },
     drop(e) {
@@ -93,14 +82,14 @@ export default {
     },
   },
   computed: {
-    targetForString() {
-      return {
-        name: 'DocumentView',
-        params: {
-          json: this.getJson(this.json),
-        },
-      };
+    json() {
+      return this.state ? JSON.parse(this.text) : null;
     },
+  },
+  components: {
+    Icon,
+    AnyView,
+    CollapseView,
   },
 };
 </script>

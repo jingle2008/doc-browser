@@ -16,7 +16,7 @@
       header-text-variant="light"
       footer-bg-variant="dark"
       footer-text-variant="light">
-      <object-view :data="data"></object-view>
+      <object-view :data="data" visible></object-view>
     </b-modal>
   </div>
 </template>

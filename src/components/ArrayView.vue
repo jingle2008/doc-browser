@@ -1,5 +1,11 @@
 <template>
-  <div>
+  <span v-if="!data.length" class="font-italic text-info">
+    [Empty Array]
+  </span>
+  <collapse-view
+    v-else
+    :header="displayHeader"
+    :visible="visible">
     <filter-view
       v-if="complex"
       :total.sync="totalRows"
@@ -12,28 +18,26 @@
       :fields="fields"
       :filter="keyword"
       bordered
-      caption-top
       head-variant="light"
       :current-page="currentPage"
       :per-page="complex ? perPage : 0"
       show-empty
       @filtered="onFiltered">
-      <template slot="table-caption">
-        <h4 v-if="caption">{{ caption }}</h4>
-      </template>
       <template
         v-for="(field, index) in complexFields"
         :slot="field"
         slot-scope="data">
-        <any-view :data="data.value" :key="index"></any-view>
+        <any-view :data="data.value" :key="index">
+        </any-view>
       </template>
     </b-table>
-  </div>
+  </collapse-view>
 </template>
 
 <script>
 import AnyView from './AnyView';
 import FilterView from './FilterView';
+import CollapseView from './CollapseView';
 import mixins from './mixins';
 
 export default {
@@ -43,8 +47,17 @@ export default {
       type: Array,
       required: true,
     },
-    caption: {
+    header: {
       type: String,
+      default: 'Array',
+    },
+    showFilter: {
+      type: Boolean,
+      default: null,
+    },
+    visible: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -57,23 +70,23 @@ export default {
   },
   components: {
     FilterView,
+    CollapseView,
   },
   beforeCreate() {
     this.$options.components.AnyView = AnyView;
   },
   methods: {
+    isObjectArray(value) {
+      return value.every(this.isObject);
+    },
     isSimple(value) {
       return this.isPrimitive(value)
         || this.isString(value)
         || this.isDate(value);
     },
-    isSimpleArray(value) {
-      return value.every(this.isSimple);
-    },
-    isSimpleObject(value) {
+    isSimpleObjectArray(value) {
       return value.every(
-        item => this.isObject(item)
-        && Object.keys(item).length === 1);
+        item => Object.keys(item).length === 1);
     },
     onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
@@ -81,26 +94,35 @@ export default {
     },
   },
   computed: {
-    complex() {
-      return this.data.length >= 20;
+    displayHeader() {
+      return `${this.header} (${this.data.length})`;
     },
-    items() {
-      if (this.isSimpleArray(this.data)) {
-        return this.data.map((item, index) => (
-          {
-            id: index + 1,
-            value: item,
-          }));
-      } else if (this.isSimpleObject(this.data)) {
-        const name = Object.keys(this.data[0])[0];
-        return this.data.map((item, index) => (
-          {
-            id: index + 1,
-            [name]: item[name],
-          }));
+    complex() {
+      if (this.showFilter !== null) {
+        return this.showFilter;
       }
 
-      return this.data;
+      return this.items.length >= 20;
+    },
+    items() {
+      if (this.isObjectArray(this.data)) {
+        if (this.isSimpleObjectArray(this.data)) {
+          const name = Object.keys(this.data[0])[0];
+          return this.data.map((item, index) => (
+            {
+              index: index + 1,
+              [name]: item[name],
+            }));
+        }
+
+        return this.data;
+      }
+
+      return this.data.map((item, index) => (
+        {
+          index: index + 1,
+          value: item,
+        }));
     },
     fieldDefs() {
       const item = this.items[0];

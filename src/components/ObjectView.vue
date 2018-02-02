@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <span
+    v-if="isEmpty"
+    class="font-italic text-info">
+    {Empty Object}
+  </span>
+  <collapse-view
+    v-else
+    :visible="visible"
+    :header="header">
     <filter-view
       v-if="complex"
       :total.sync="totalRows"
@@ -18,9 +26,6 @@
       :per-page="complex ? perPage : 0"
       show-empty
       @filtered="onFiltered">
-      <template slot="table-caption">
-        <h4 v-if="caption">{{ caption }}</h4>
-      </template>
       <template slot="table-colgroup">
         <col span="1" class="bg-light">
       </template>
@@ -33,12 +38,13 @@
         <any-view :data="data.value"></any-view>
       </template>
     </b-table>
-  </div>
+  </collapse-view>
 </template>
 
 <script>
 import AnyView from './AnyView';
 import FilterView from './FilterView';
+import CollapseView from './CollapseView';
 import mixins from './mixins';
 
 export default {
@@ -48,8 +54,17 @@ export default {
       type: Object,
       required: true,
     },
-    caption: {
+    header: {
       type: String,
+      default: 'Object',
+    },
+    showFilter: {
+      type: Boolean,
+      default: null,
+    },
+    visible: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -73,6 +88,7 @@ export default {
   },
   components: {
     FilterView,
+    CollapseView,
   },
   beforeCreate() {
     this.$options.components.AnyView = AnyView;
@@ -101,7 +117,14 @@ export default {
         }));
     },
     complex() {
+      if (this.showFilter !== null) {
+        return this.showFilter;
+      }
+
       return this.items.length >= 20;
+    },
+    isEmpty() {
+      return this.keys.length === 0;
     },
   },
   mixins: [mixins],
