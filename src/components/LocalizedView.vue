@@ -1,7 +1,7 @@
 <template>
   <div>
     <a href="#" @click.prevent v-b-modal="id">
-      <icon name="globe" scale="2"></icon>
+      <icon name="globe" scale="2" />
     </a>
     <b-badge pill>
       {{ Object.keys(data).length }}
@@ -16,7 +16,7 @@
       header-text-variant="light"
       footer-bg-variant="dark"
       footer-text-variant="light">
-      <object-view :data="data" visible></object-view>
+      <object-view :data="data" visible />
     </b-modal>
   </div>
 </template>

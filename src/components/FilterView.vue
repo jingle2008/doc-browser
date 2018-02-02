@@ -11,7 +11,7 @@
     <b-col sm="12" md="6" class="mb-2">
       <b-input-group>
         <b-input-group-prepend is-text>
-          <icon name="search" scale="1.5"></icon>
+          <icon name="search" scale="1.5" />
         </b-input-group-prepend>
         <b-form-input
           :value="keyword"

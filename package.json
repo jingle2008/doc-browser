@@ -21,7 +21,6 @@
     "raven-js": "^3.21.0",
     "vue": "^2.5.2",
     "vue-awesome": "^2.3.4",
-    "vue-router": "^3.0.1",
     "vue-simple-spinner": "^1.2.8"
   },
   "devDependencies": {

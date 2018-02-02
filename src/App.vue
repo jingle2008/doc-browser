@@ -11,12 +11,12 @@
             <b-nav-item
               href="https://github.com/jingle2008/doc-browser"
               target="_blank">
-              <icon name="github" scale="2"></icon>
+              <icon name="github" scale="2" />
             </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-      <router-view/>
+      <home-view/>
     </b-container>
   </div>
 </template>
@@ -25,11 +25,13 @@
 import 'vue-awesome/icons/bomb';
 import 'vue-awesome/icons/github';
 import Icon from 'vue-awesome/components/Icon';
+import HomeView from './components/HomeView';
 
 export default {
   name: 'app',
   components: {
     Icon,
+    HomeView,
   },
 };
 </script>

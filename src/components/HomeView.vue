@@ -7,8 +7,7 @@
           v-model="file"
           placeholder="Choose a json file..."
           @input="loadFile"
-          accept=".json">
-        </b-form-file>
+          accept=".json" />
         <b-input-group-append>
           <b-btn
             :disabled="!file"
@@ -27,12 +26,11 @@
         :max-rows="25"
         @dragenter.native.stop.prevent
         @dragover.native.stop.prevent
-        @drop.native.stop.prevent="drop">
-      </b-form-textarea>
+        @drop.native.stop.prevent="drop" />
       <b-form-text>{{ error }}</b-form-text>
     </collapse-view>
     <collapse-view header="Viewer Panel" visible>
-      <any-view :data="json"></any-view>
+      <any-view :data="json" />
     </collapse-view>
   </div>
 </template>

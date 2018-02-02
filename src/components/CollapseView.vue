@@ -6,8 +6,7 @@
       <icon
         :name="icon"
         class="align-text-bottom"
-        scale="1.3">
-      </icon>
+        scale="1.3" />
       <b class="card-title">{{ header }}</b>
     </div>
     <b-collapse
@@ -16,7 +15,7 @@
       @show="toggle"
       @hide="toggle"
       class="card-body">
-      <slot></slot>
+      <slot />
     </b-collapse>
   </div>
 </template>

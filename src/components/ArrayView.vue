@@ -1,5 +1,7 @@
 <template>
-  <span v-if="!data.length" class="font-italic text-info">
+  <span
+    v-if="!data.length"
+    class="font-italic text-info">
     [Empty Array]
   </span>
   <collapse-view
@@ -11,13 +13,13 @@
       :total.sync="totalRows"
       :current.sync="currentPage"
       :pageSize.sync="perPage"
-      :keyword.sync="keyword">
-    </filter-view>
+      :keyword.sync="keyword" />
     <b-table
       :items="items"
       :fields="fields"
       :filter="keyword"
       bordered
+      responsive
       head-variant="light"
       :current-page="currentPage"
       :per-page="complex ? perPage : 0"
@@ -27,8 +29,9 @@
         v-for="(field, index) in complexFields"
         :slot="field"
         slot-scope="data">
-        <any-view :data="data.value" :key="index">
-        </any-view>
+        <any-view
+          :data="data.value"
+          :key="index" />
       </template>
     </b-table>
   </collapse-view>

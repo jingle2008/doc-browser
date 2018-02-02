@@ -13,14 +13,13 @@
       :total.sync="totalRows"
       :current.sync="currentPage"
       :pageSize.sync="perPage"
-      :keyword.sync="keyword">
-    </filter-view>
+      :keyword.sync="keyword" />
     <b-table
       :items="items"
       :fields="fields"
       :filter="filter"
       bordered
-      caption-top
+      responsive
       head-variant="light"
       :current-page="currentPage"
       :per-page="complex ? perPage : 0"
@@ -35,7 +34,7 @@
         </span>
       </template>
       <template slot="value" slot-scope="data">
-        <any-view :data="data.value"></any-view>
+        <any-view :data="data.value" />
       </template>
     </b-table>
   </collapse-view>

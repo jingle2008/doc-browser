@@ -2,16 +2,11 @@
   <span v-if="isNull(data)" class="font-italic text-info">
     Null
   </span>
-  <boolean-view v-else-if="isBoolean(data)" :data="data">
-  </boolean-view>
-  <string-view v-else-if="isString(data)" :data="data">
-  </string-view>
-  <localized-view v-else-if="isLocalized(data)" :data="data">
-  </localized-view>
-  <object-view v-else-if="isObject(data)" :data="data">
-  </object-view>
-  <array-view v-else-if="isArray(data)" :data="data">
-  </array-view>
+  <boolean-view v-else-if="isBoolean(data)" :data="data" />
+  <string-view v-else-if="isString(data)" :data="data" />
+  <localized-view v-else-if="isLocalized(data)" :data="data" />
+  <object-view v-else-if="isObject(data)" :data="data" />
+  <array-view v-else-if="isArray(data)" :data="data" />
   <span v-else>{{ data }}</span>
 </template>
 
