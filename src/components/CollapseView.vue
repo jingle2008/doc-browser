@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      id: `id-${this.guid()}`,
+      id: `collapse-view-${this.guid()}`,
       open: this.visible,
     };
   },

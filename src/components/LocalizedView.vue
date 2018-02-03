@@ -16,7 +16,7 @@
       header-text-variant="light"
       footer-bg-variant="dark"
       footer-text-variant="light">
-      <object-view :data="data" visible />
+      <object-view :data="data" expand />
     </b-modal>
   </div>
 </template>
@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     id() {
-      return `id-${this.guid()}`;
+      return `localized-view-${this.guid()}`;
     },
   },
   beforeCreate() {

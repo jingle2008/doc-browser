@@ -6,11 +6,11 @@
   </span>
   <collapse-view
     v-else
-    :visible="visible"
+    :visible="expand"
     :header="header">
     <filter-view
       v-if="complex"
-      :total.sync="totalRows"
+      :total="totalRows"
       :current.sync="currentPage"
       :pageSize.sync="perPage"
       :keyword.sync="keyword" />
@@ -19,7 +19,6 @@
       :fields="fields"
       :filter="filter"
       bordered
-      responsive
       head-variant="light"
       :current-page="currentPage"
       :per-page="complex ? perPage : 0"
@@ -61,7 +60,7 @@ export default {
       type: Boolean,
       default: null,
     },
-    visible: {
+    expand: {
       type: Boolean,
       default: false,
     },
@@ -116,6 +115,10 @@ export default {
         }));
     },
     complex() {
+      if (this.keyword) {
+        return true;
+      }
+
       if (this.showFilter !== null) {
         return this.showFilter;
       }

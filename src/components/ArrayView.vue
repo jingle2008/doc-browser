@@ -7,24 +7,26 @@
   <collapse-view
     v-else
     :header="displayHeader"
-    :visible="visible">
+    :visible="expand">
     <filter-view
       v-if="complex"
-      :total.sync="totalRows"
+      :total="totalRows"
       :current.sync="currentPage"
       :pageSize.sync="perPage"
-      :keyword.sync="keyword" />
+      :keyword.sync="keyword"
+      :columns="fieldNames"
+      @update:filterColumns="onFieldsFiltered" />
     <b-table
+      v-if="fields.length"
       :items="items"
       :fields="fields"
       :filter="keyword"
       bordered
-      responsive
       head-variant="light"
       :current-page="currentPage"
       :per-page="complex ? perPage : 0"
       show-empty
-      @filtered="onFiltered">
+      @filtered="onItemsFiltered">
       <template
         v-for="(field, index) in complexFields"
         :slot="field"
@@ -34,6 +36,10 @@
           :key="index" />
       </template>
     </b-table>
+    <b-alert
+      v-else
+      variant="warning"
+      show>There are no columns selected.</b-alert>
   </collapse-view>
 </template>
 
@@ -58,7 +64,7 @@ export default {
       type: Boolean,
       default: null,
     },
-    visible: {
+    expand: {
       type: Boolean,
       default: false,
     },
@@ -69,6 +75,7 @@ export default {
       currentPage: 1,
       perPage: 10,
       totalRows: 0,
+      filteredFields: null,
     };
   },
   components: {
@@ -91,9 +98,19 @@ export default {
       return value.every(
         item => Object.keys(item).length === 1);
     },
-    onFiltered(filteredItems) {
+    onItemsFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
+    },
+    onFieldsFiltered(filteredFields) {
+      this.filteredFields = filteredFields;
+    },
+    shouldShow(field) {
+      if (this.filteredFields !== null) {
+        return this.filteredFields.includes(field);
+      }
+
+      return true;
     },
   },
   computed: {
@@ -101,6 +118,10 @@ export default {
       return `${this.header} (${this.data.length})`;
     },
     complex() {
+      if (this.keyword) {
+        return true;
+      }
+
       if (this.showFilter !== null) {
         return this.showFilter;
       }
@@ -146,7 +167,12 @@ export default {
         {
           key: def.key,
           sortable: def.simple,
-        }));
+        }))
+        .filter(f => this.shouldShow(f.key));
+    },
+    fieldNames() {
+      return this.fieldDefs
+        .map(def => def.key);
     },
   },
   mixins: [mixins],
