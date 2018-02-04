@@ -48,24 +48,21 @@
       v-if="canFilter"
       sm="auto"
       class="mb-2">
-      <b-btn :id="id">
-        <icon
-          name="filter"
-          scale="1.2"
-          class="align-text-bottom" />
-        Columns
-      </b-btn>
-      <b-popover
-        :target="id"
-        triggers="click blur"
-        placement="auto"
-        title="Filter Columns">
+      <b-dropdown>
+        <template slot="button-content">
+          <icon
+            name="filter"
+            scale="1.2"
+            class="align-text-bottom" />
+          Columns
+        </template>
         <b-form-checkbox-group
+          class="px-3 py-1"
           stacked
           v-model="filterColumns"
           :options="allColumns"
           @input="changeColumns" />
-      </b-popover>
+        </b-dropdown>
     </b-col>
   </b-row>
 </template>
@@ -76,7 +73,6 @@ import 'vue-awesome/icons/filter';
 import 'vue-awesome/icons/times';
 import Icon from 'vue-awesome/components/Icon';
 import startCase from 'lodash.startcase';
-import mixins from './mixins';
 
 export default {
   name: 'FilterView',
@@ -110,7 +106,6 @@ export default {
   },
   data() {
     return {
-      id: `filter-view-${this.guid()}`,
       filterColumns: this.columns
         ? this.columns.slice(0)
         : null,
@@ -150,6 +145,5 @@ export default {
   components: {
     Icon,
   },
-  mixins: [mixins],
 };
 </script>
