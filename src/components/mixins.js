@@ -82,5 +82,13 @@ export default {
 
       return value.en || value['en-US'];
     },
+    format(fmt, ...args) {
+      return fmt.replace(
+        /{(\d+)}/g,
+        (match, number) =>
+          (typeof args[number] !== 'undefined'
+            ? args[number]
+            : match));
+    },
   },
 };

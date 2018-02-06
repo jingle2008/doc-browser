@@ -22,7 +22,7 @@
     "raven-js": "^3.21.0",
     "vue": "^2.5.2",
     "vue-awesome": "^2.3.4",
-    "vue-simple-spinner": "^1.2.8"
+    "vuelidate": "^0.6.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
