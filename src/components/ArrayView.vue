@@ -28,6 +28,12 @@
       show-empty
       @filtered="onItemsFiltered">
       <template
+        v-if="lineNo"
+        slot="index"
+        slot-scope="data">
+        {{ items.indexOf(data.item) + 1 }}
+      </template>
+      <template
         v-for="(field, index) in complexFields"
         :slot="field"
         slot-scope="data">
@@ -68,6 +74,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    lineNo: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -93,10 +103,6 @@ export default {
       return this.isPrimitive(value)
         || this.isString(value)
         || this.isDate(value);
-    },
-    isSimpleObjectArray(value) {
-      return value.every(
-        item => Object.keys(item).length === 1);
     },
     onItemsFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
@@ -130,23 +136,10 @@ export default {
     },
     items() {
       if (this.isObjectArray(this.data)) {
-        if (this.isSimpleObjectArray(this.data)) {
-          const name = Object.keys(this.data[0])[0];
-          return this.data.map((item, index) => (
-            {
-              index: index + 1,
-              [name]: item[name],
-            }));
-        }
-
         return this.data;
       }
 
-      return this.data.map((item, index) => (
-        {
-          index: index + 1,
-          value: item,
-        }));
+      return this.data.map(value => ({ value }));
     },
     fieldDefs() {
       const item = this.items[0];
@@ -163,12 +156,18 @@ export default {
         .map(def => def.key);
     },
     fields() {
-      return this.fieldDefs.map(def => (
+      const results = this.fieldDefs.map(def => (
         {
           key: def.key,
           sortable: def.simple,
         }))
         .filter(f => this.shouldShow(f.key));
+
+      if (this.lineNo) {
+        results.unshift({ key: 'index' });
+      }
+
+      return results;
     },
     fieldNames() {
       return this.fieldDefs
