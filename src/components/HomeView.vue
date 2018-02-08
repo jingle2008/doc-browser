@@ -99,6 +99,10 @@
       centered
       lazy
       title="Fetch Documents"
+      header-bg-variant="dark"
+      header-text-variant="light"
+      footer-bg-variant="dark"
+      footer-text-variant="light"
       :ok-disabled="$v.result.$invalid"
       @show="remoteInit($v.result)"
       @ok="remoteConfirm">
@@ -182,7 +186,11 @@
         {{ parsingError }}
       </b-form-text>
     </div>
-    <any-view v-show="!editing" :data="json" />
+    <any-view
+      v-show="!editing"
+      :data="json"
+      :urlTemplate="urlTemplate"
+      :docIdField="idField" />
   </div>
 </template>
 
@@ -288,7 +296,7 @@ export default {
         setTimeout(() => {
           this.showProgress = false;
           this.loadingProgress = 0;
-        }, 2000);
+        }, 1000);
       }
     },
     displayError(error) {

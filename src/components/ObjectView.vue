@@ -24,16 +24,28 @@
       :per-page="complex ? perPage : 0"
       show-empty
       @filtered="onFiltered">
-      <template slot="table-colgroup">
-        <col span="1" class="bg-light">
+      <template
+        slot="table-colgroup">
+        <col
+          span="1"
+          class="bg-light">
       </template>
-      <template slot="property" slot-scope="data">
-        <span class="text-capitalize">
+      <template
+        slot="property"
+        slot-scope="data">
+        <span
+          class="text-capitalize">
           {{ data.value }}
         </span>
       </template>
-      <template slot="value" slot-scope="data">
-        <any-view :data="data.value" />
+      <template
+        slot="value"
+        slot-scope="data">
+        <any-view
+          :data="data.value"
+          :property="data.item.property"
+          :urlTemplate="urlTemplate"
+          :docIdField="docIdField" />
       </template>
     </b-table>
   </collapse-view>
@@ -42,8 +54,10 @@
 <script>
 import AnyView from './AnyView';
 import FilterView from './FilterView';
+import ExternalView from './ExternalView';
 import CollapseView from './CollapseView';
 import mixins from './mixins';
+import templateMixins from './templateMixins';
 
 export default {
   name: 'ObjectView',
@@ -86,6 +100,7 @@ export default {
   },
   components: {
     FilterView,
+    ExternalView,
     CollapseView,
   },
   beforeCreate() {
@@ -129,6 +144,6 @@ export default {
       return this.keys.length === 0;
     },
   },
-  mixins: [mixins],
+  mixins: [mixins, templateMixins],
 };
 </script>

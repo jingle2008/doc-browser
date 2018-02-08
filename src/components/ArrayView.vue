@@ -39,7 +39,10 @@
         slot-scope="data">
         <any-view
           :data="data.value"
-          :key="index" />
+          :key="index"
+          :property="field"
+          :urlTemplate="urlTemplate"
+          :docIdField="docIdField" />
       </template>
     </b-table>
     <b-alert
@@ -54,6 +57,7 @@ import AnyView from './AnyView';
 import FilterView from './FilterView';
 import CollapseView from './CollapseView';
 import mixins from './mixins';
+import templateMixins from './templateMixins';
 
 export default {
   name: 'ArrayView',
@@ -144,24 +148,12 @@ export default {
     fieldDefs() {
       const item = this.items[0];
       const keys = Object.keys(item);
-      return keys.map(key => (
+      const results = keys.map(key => (
         {
           key,
-          simple: this.isSimple(item[key]),
+          simple: this.isSimple(item[key])
+            && !this.isExternal(key),
         }));
-    },
-    complexFields() {
-      return this.fieldDefs
-        .filter(def => !def.simple)
-        .map(def => def.key);
-    },
-    fields() {
-      const results = this.fieldDefs.map(def => (
-        {
-          key: def.key,
-          sortable: def.simple,
-        }))
-        .filter(f => this.shouldShow(f.key));
 
       if (this.lineNo) {
         results.unshift({ key: 'index' });
@@ -169,11 +161,24 @@ export default {
 
       return results;
     },
+    complexFields() {
+      return this.fieldDefs
+        .filter(def => def.simple === false)
+        .map(def => def.key);
+    },
+    fields() {
+      return this.fieldDefs.map(def => (
+        {
+          key: def.key,
+          sortable: def.simple === true,
+        }))
+        .filter(f => this.shouldShow(f.key));
+    },
     fieldNames() {
       return this.fieldDefs
         .map(def => def.key);
     },
   },
-  mixins: [mixins],
+  mixins: [mixins, templateMixins],
 };
 </script>

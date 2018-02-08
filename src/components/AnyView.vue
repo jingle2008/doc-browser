@@ -1,13 +1,39 @@
 <template>
-  <span v-if="isNull(data)" class="font-italic text-info">
+  <span
+    v-if="isNull(data)"
+    class="font-italic text-info">
     Null
   </span>
-  <boolean-view v-else-if="isBoolean(data)" :data="data" />
-  <string-view v-else-if="isString(data)" :data="data" />
-  <localized-view v-else-if="isLocalized(data)" :data="data" />
-  <object-view v-else-if="isObject(data)" :data="data" />
-  <array-view v-else-if="isArray(data)" :data="data" />
-  <span v-else>{{ data }}</span>
+  <boolean-view
+    v-else-if="isBoolean(data)"
+    :data="data" />
+  <external-view
+    v-else-if="isExternal(property) && isString(data)"
+    :data="data"
+    :urlTemplate="urlTemplate"
+    :docIdField="docIdField" />
+  <string-view
+    v-else-if="isString(data)"
+    :data="data" />
+  <localized-view
+    v-else-if="isLocalized(data)"
+    :data="data"
+    :urlTemplate="urlTemplate"
+    :docIdField="docIdField" />
+  <object-view
+    v-else-if="isObject(data)"
+    :data="data"
+    :urlTemplate="urlTemplate"
+    :docIdField="docIdField" />
+  <array-view
+    v-else-if="isArray(data)"
+    :data="data"
+    :urlTemplate="urlTemplate"
+    :docIdField="docIdField" />
+  <span
+    v-else>
+    {{ data }}
+  </span>
 </template>
 
 <script>
@@ -16,13 +42,19 @@ import ArrayView from './ArrayView';
 import ObjectView from './ObjectView';
 import BooleanView from './BooleanView';
 import LocalizedView from './LocalizedView';
+import ExternalView from './ExternalView';
 import mixins from './mixins';
+import templateMixins from './templateMixins';
 
 export default {
   name: 'AnyView',
   props: {
     data: {
       required: true,
+    },
+    property: {
+      type: String,
+      default: null,
     },
   },
   beforeCreate() {
@@ -33,7 +65,8 @@ export default {
     BooleanView,
     LocalizedView,
     StringView,
+    ExternalView,
   },
-  mixins: [mixins],
+  mixins: [mixins, templateMixins],
 };
 </script>

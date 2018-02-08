@@ -11,12 +11,17 @@
       :id="id"
       size="lg"
       lazy
+      centered
       title="Localized Values"
       header-bg-variant="dark"
       header-text-variant="light"
       footer-bg-variant="dark"
       footer-text-variant="light">
-      <object-view :data="data" expand />
+      <object-view
+        :data="data"
+        :urlTemplate="urlTemplate"
+        :docIdField="docIdField"
+        expand />
     </b-modal>
   </div>
 </template>
@@ -25,6 +30,7 @@
 import 'vue-awesome/icons/globe';
 import Icon from 'vue-awesome/components/Icon';
 import mixins from './mixins';
+import templateMixins from './templateMixins';
 import ObjectView from './ObjectView';
 
 export default {
@@ -46,6 +52,6 @@ export default {
   components: {
     Icon,
   },
-  mixins: [mixins],
+  mixins: [mixins, templateMixins],
 };
 </script>
