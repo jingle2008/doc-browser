@@ -30,7 +30,9 @@
 <script>
 import 'vue-awesome/icons/external-link';
 import Icon from 'vue-awesome/components/Icon';
+import { mapGetters } from 'vuex';
 import AnyView from './AnyView';
+import { guid, format } from '../../../utils/common';
 
 export default {
   name: 'ExternalView',
@@ -68,10 +70,14 @@ export default {
       return `url-view-${this.guid()}`;
     },
     jsonUrl() {
-      return '';
-      // return this.format(
-      // this.urlTemplate, this.data);
+      return this.format(
+        `${this.prefix}{0}${this.suffix || ''}`,
+        this.data);
     },
+    ...mapGetters([
+      'prefix',
+      'suffix',
+    ]),
   },
   beforeCreate() {
     this.$options.components.AnyView = AnyView;
@@ -79,5 +85,12 @@ export default {
   components: {
     Icon,
   },
+  mixins: [{
+    methods: {
+      guid,
+      format,
+    },
+  }],
 };
+
 </script>

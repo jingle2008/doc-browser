@@ -111,7 +111,6 @@
             :append="enable ? suffix : ''">
             <b-form-input
               :state="!$v.url.$invalid"
-              :type="urlType"
               autofocus
               aria-describedby="urlFeedback"
               v-model.trim="url"
@@ -263,9 +262,6 @@ export default {
       return !this.enable
         ? 'This field is required and must be an URL.'
         : 'This field is required.';
-    },
-    urlType() {
-      return this.requireUrl ? 'url' : 'text';
     },
     jsonUrl() {
       return this.enable
