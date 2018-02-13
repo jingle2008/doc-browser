@@ -1,12 +1,5 @@
 <template>
   <div>
-    <b-alert
-      :show="showError"
-      @dismissed="showError=false"
-      variant="danger"
-      dismissible>
-      {{ error }}
-    </b-alert>
     <b-row
       class="mb-2"
       align-h="between">
@@ -17,7 +10,7 @@
           <b-button-group
             class="mr-2">
             <b-btn
-              @click="createNew">
+              @click="dataChanged('')">
               <icon
                 name="file"
                 class="align-text-bottom"
@@ -103,7 +96,7 @@
       header-text-variant="light"
       footer-bg-variant="dark"
       footer-text-variant="light"
-      :ok-disabled="$v.result.$invalid"
+      :ok-disabled="$v.url.$invalid"
       @show="remoteInit($v.result)"
       @ok="remoteConfirm">
       <b-form
@@ -114,54 +107,20 @@
           description="Please enter url of remote json document."
           label="Remote Url:">
           <b-input-group
-            :prepend="result.prefix"
-            :append="result.suffix">
+            :prepend="enable ? prefix : ''"
+            :append="enable ? suffix : ''">
             <b-form-input
-              :state="inputState($v.result.url)"
+              :state="!$v.url.$invalid"
               :type="urlType"
               autofocus
               aria-describedby="urlFeedback"
-              v-model.trim="result.url"
-              @input="$v.result.url.$touch()" />
+              v-model.trim="url"
+              @input="$v.url.$touch()" />
             <b-form-invalid-feedback id="urlFeedback">
               {{ urlFeedback }}
             </b-form-invalid-feedback>
           </b-input-group>
         </b-form-group>
-        <collapse-view
-          v-if="result"
-          header="Url Template (Optional)">
-          <b-form-group
-            description="{Id} will be substituted with real document id provided."
-            label="Url Template:">
-            <b-input-group>
-              <b-form-input
-                placeholder="http://example.com/id="
-                :state="inputState($v.result.prefix)"
-                aria-describedby="prefixFeedback"
-                v-model.trim="result.prefix"
-                @input="$v.result.prefix.$touch()" />
-              <b-form-invalid-feedback id="prefixFeedback">
-                This field must be an URL.
-              </b-form-invalid-feedback>
-              <b-input-group-append>
-                <b-input-group-text>
-                  { Id }
-                </b-input-group-text>
-              </b-input-group-append>
-              <b-form-input
-                placeholder="?format=json"
-                v-model.trim="result.suffix" />
-            </b-input-group>
-          </b-form-group>
-          <b-form-group
-            description="This field is used to identify referenced external documents."
-            label="Document Id Field:">
-            <b-form-input
-              placeholder="Example: _id"
-              v-model.trim="result.idField" />
-          </b-form-group>
-        </collapse-view>
       </b-form>
     </b-modal>
     <b-form-file
@@ -171,26 +130,14 @@
       v-show="false"
       @input="loadFile"
       accept=".json" />
-    <div
-      v-show="editing">
-      <b-form-textarea
-        v-model="text"
-        placeholder="Enter your valid json data here."
-        @input="validateText"
-        :state="state"
-        rows="30"
-        @dragenter.native.stop.prevent
-        @dragover.native.stop.prevent
-        @drop.native.stop.prevent="drop" />
-      <b-form-text>
-        {{ parsingError }}
-      </b-form-text>
-    </div>
-    <any-view
-      v-show="!editing"
-      :data="json"
-      :urlTemplate="urlTemplate"
-      :docIdField="idField" />
+    <keep-alive>
+      <component
+        :is="viewName"
+        :data="viewData"
+        @update:data="dataChanged"
+        @file-dropped="loadFile">
+      </component>
+    </keep-alive>
   </div>
 </template>
 
@@ -202,11 +149,12 @@ import 'vue-awesome/icons/cloud';
 import 'vue-awesome/icons/edit';
 import 'vue-awesome/icons/th-list';
 import Icon from 'vue-awesome/components/Icon';
+import { mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, url } from 'vuelidate/lib/validators';
-import AnyView from './AnyView';
-import CollapseView from './CollapseView';
-import mixins from './mixins';
+import { AnyView, CollapseView } from '../../shared/components';
+import { format } from '../../../utils/common';
+import EditorView from './EditorView';
 
 export default {
   name: 'HomeView',
@@ -215,15 +163,7 @@ export default {
       editing: true,
       text: '',
       json: null,
-      state: null,
-      showError: false,
-      error: '',
-      parsingError: null,
       file: null,
-      result: {},
-      prefix: null,
-      suffix: null,
-      idField: null,
       url: null,
       showProgress: false,
       loadingProgress: 0,
@@ -231,55 +171,38 @@ export default {
     };
   },
   methods: {
-    validateText(value) {
-      try {
-        if (value) {
-          this.json = JSON.parse(value);
-          this.state = true;
-        } else {
-          this.state = null;
-        }
+    ...mapActions([
+      'notify',
+    ]),
+    dataChanged(value) {
+      this.text = value;
 
-        this.parsingError = '';
+      try {
+        this.json = value ? JSON.parse(value) : null;
       } catch (error) {
-        this.state = false;
-        this.parsingError = error.message;
+        // eslint-disable-next-line
       }
-    },
-    createNew() {
-      this.text = null;
     },
     loadFile(value) {
-      if (!value) {
-        return;
-      }
+      if (!value) return;
 
       this.showLoading(2);
 
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.text = e.target.result;
+        this.dataChanged(e.target.result);
         this.updateProgress();
       };
 
       reader.readAsText(value);
       this.updateProgress();
     },
-    drop(e) {
-      this.loadFile(e.dataTransfer.files[0]);
-    },
     browseLocal() {
       this.$refs.fileinput.reset();
       this.$refs.fileinput.$el.click();
     },
     remoteInit(validation) {
-      this.result = {
-        prefix: this.prefix,
-        suffix: this.suffix,
-        idField: this.idField,
-        url: null,
-      };
-
+      this.url = null;
       validation.$reset();
     },
     showLoading(total) {
@@ -299,52 +222,45 @@ export default {
         }, 1000);
       }
     },
-    displayError(error) {
-      this.error = error;
-      this.showError = !!error;
-    },
     async remoteConfirm() {
-      this.showLoading(4);
-
-      Object.assign(this, this.result);
-      this.updateProgress();
-
-      // TODO: save prefix, suffix and idField
-      this.updateProgress();
+      this.showLoading(2);
 
       try {
         const res = await fetch(this.jsonUrl, { mode: 'cors' });
         this.updateProgress();
         if (res.ok) {
-          this.text = await res.text();
-          this.displayError();
+          this.dataChanged(await res.text());
+          this.notify();
           this.updateProgress();
         } else {
           throw new Error(res.statusText);
         }
       } catch (error) {
         this.updateProgress(this.totalProgress);
-        this.displayError(
-          `Error fetching document (${this.jsonUrl}): ${error}`);
+        this.notify(
+          `Error fetching document '${this.jsonUrl}': ${error}`);
       }
-    },
-    inputState(validation) {
-      return validation.$dirty
-        ? !validation.$invalid
-        : null;
     },
   },
   computed: {
+    ...mapGetters([
+      'enable',
+      'prefix',
+      'suffix',
+    ]),
+    viewData() {
+      return this.editing ? this.text : this.json;
+    },
+    viewName() {
+      return this.editing ? 'EditorView' : 'AnyView';
+    },
     urlTemplate() {
-      return this.prefix
+      return this.enable
         ? `${this.prefix}{0}${this.suffix || ''}`
         : null;
     },
-    requireUrl() {
-      return !this.result.prefix;
-    },
     urlFeedback() {
-      return this.requireUrl
+      return !this.enable
         ? 'This field is required and must be an URL.'
         : 'This field is required.';
     },
@@ -352,7 +268,7 @@ export default {
       return this.requireUrl ? 'url' : 'text';
     },
     jsonUrl() {
-      return this.urlTemplate
+      return this.enable
         ? this.format(this.urlTemplate, this.url)
         : this.url;
     },
@@ -361,18 +277,21 @@ export default {
     Icon,
     AnyView,
     CollapseView,
+    EditorView,
   },
-  mixins: [mixins, validationMixin],
+  mixins: [
+    {
+      methods: {
+        format,
+      },
+    },
+    validationMixin,
+  ],
   validations() {
     return {
-      result: {
-        url: this.requireUrl
-          ? { required, url }
-          : { required },
-        prefix: {
-          url,
-        },
-      },
+      url: !this.enable
+        ? { required, url }
+        : { required },
     };
   },
 };

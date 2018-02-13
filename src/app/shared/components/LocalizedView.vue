@@ -19,8 +19,6 @@
       footer-text-variant="light">
       <object-view
         :data="data"
-        :urlTemplate="urlTemplate"
-        :docIdField="docIdField"
         expand />
     </b-modal>
   </div>
@@ -29,9 +27,8 @@
 <script>
 import 'vue-awesome/icons/globe';
 import Icon from 'vue-awesome/components/Icon';
-import mixins from './mixins';
-import templateMixins from './templateMixins';
 import ObjectView from './ObjectView';
+import { guid, getEnglishString } from '../../../utils/common';
 
 export default {
   name: 'LocalizedView',
@@ -52,6 +49,11 @@ export default {
   components: {
     Icon,
   },
-  mixins: [mixins, templateMixins],
+  mixins: [{
+    methods: {
+      guid,
+      getEnglishString,
+    },
+  }],
 };
 </script>

@@ -22,9 +22,7 @@
       footer-bg-variant="dark"
       footer-text-variant="light">
       <any-view
-        :data="json"
-        :urlTemplate="urlTemplate"
-        :docIdField="docIdField" />
+        :data="json" />
     </b-modal>
   </div>
 </template>
@@ -32,8 +30,6 @@
 <script>
 import 'vue-awesome/icons/external-link';
 import Icon from 'vue-awesome/components/Icon';
-import mixins from './mixins';
-import templateMixins from './templateMixins';
 import AnyView from './AnyView';
 
 export default {
@@ -72,8 +68,9 @@ export default {
       return `url-view-${this.guid()}`;
     },
     jsonUrl() {
-      return this.format(
-        this.urlTemplate, this.data);
+      return '';
+      // return this.format(
+      // this.urlTemplate, this.data);
     },
   },
   beforeCreate() {
@@ -82,6 +79,5 @@ export default {
   components: {
     Icon,
   },
-  mixins: [mixins, templateMixins],
 };
 </script>

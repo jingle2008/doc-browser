@@ -28,21 +28,19 @@
       show-empty
       @filtered="onItemsFiltered">
       <template
-        v-if="lineNo"
-        slot="index"
-        slot-scope="data">
-        {{ items.indexOf(data.item) + 1 }}
-      </template>
-      <template
-        v-for="(field, index) in complexFields"
-        :slot="field"
+        v-for="(field, index) in fields"
+        :slot="field.key"
         slot-scope="data">
         <any-view
           :data="data.value"
           :key="index"
-          :property="field"
-          :urlTemplate="urlTemplate"
-          :docIdField="docIdField" />
+          :property="field.key" />
+      </template>
+      <template
+        v-if="lineNo"
+        slot="index"
+        slot-scope="data">
+        {{ items.indexOf(data.item) + 1 }}
       </template>
     </b-table>
     <b-alert
@@ -56,8 +54,7 @@
 import AnyView from './AnyView';
 import FilterView from './FilterView';
 import CollapseView from './CollapseView';
-import mixins from './mixins';
-import templateMixins from './templateMixins';
+import { isString, isObject, isDate, isPrimitive } from '../../../utils/common';
 
 export default {
   name: 'ArrayView',
@@ -101,12 +98,12 @@ export default {
   },
   methods: {
     isObjectArray(value) {
-      return value.every(this.isObject);
+      return value.every(isObject);
     },
     isSimple(value) {
-      return this.isPrimitive(value)
-        || this.isString(value)
-        || this.isDate(value);
+      return isPrimitive(value)
+        || isString(value)
+        || isDate(value);
     },
     onItemsFiltered(filteredItems) {
       this.totalRows = filteredItems.length;
@@ -151,8 +148,8 @@ export default {
       const results = keys.map(key => (
         {
           key,
-          simple: this.isSimple(item[key])
-            && !this.isExternal(key),
+          simple: this.isSimple(item[key]),
+          // && !this.isExternal(key),
         }));
 
       if (this.lineNo) {
@@ -160,11 +157,6 @@ export default {
       }
 
       return results;
-    },
-    complexFields() {
-      return this.fieldDefs
-        .filter(def => def.simple === false)
-        .map(def => def.key);
     },
     fields() {
       return this.fieldDefs.map(def => (
@@ -179,6 +171,5 @@ export default {
         .map(def => def.key);
     },
   },
-  mixins: [mixins, templateMixins],
 };
 </script>

@@ -43,9 +43,7 @@
         slot-scope="data">
         <any-view
           :data="data.value"
-          :property="data.item.property"
-          :urlTemplate="urlTemplate"
-          :docIdField="docIdField" />
+          :property="data.item.property" />
       </template>
     </b-table>
   </collapse-view>
@@ -56,8 +54,6 @@ import AnyView from './AnyView';
 import FilterView from './FilterView';
 import ExternalView from './ExternalView';
 import CollapseView from './CollapseView';
-import mixins from './mixins';
-import templateMixins from './templateMixins';
 
 export default {
   name: 'ObjectView',
@@ -144,6 +140,5 @@ export default {
       return this.keys.length === 0;
     },
   },
-  mixins: [mixins, templateMixins],
 };
 </script>

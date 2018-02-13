@@ -1,7 +1,7 @@
-<template>
-    <b-form-checkbox :checked="data" disabled>
-      {{ data ? "Yes" : "No" }}
-    </b-form-checkbox>
+<template functional>
+  <b-form-checkbox :checked="props.data" disabled>
+    {{ props.data ? "Yes" : "No" }}
+  </b-form-checkbox>
 </template>
 
 <script>

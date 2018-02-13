@@ -5,10 +5,16 @@
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         <b-navbar-brand href="/">
           <icon name="bomb" scale="2" />
-          Document Browser
         </b-navbar-brand>
         <b-collapse is-nav id="nav_collapse">
+          <b-navbar-nav>	
+            <b-nav-item :to="{name: 'DocBrowser'}">Document Browser</b-nav-item>	
+            <b-nav-item href="#" disabled>Javescript Playground</b-nav-item>	
+          </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
+            <b-nav-item v-b-modal.config>
+              <icon name="cog" scale="2" />             
+            </b-nav-item>
             <b-nav-item
               href="https://github.com/jingle2008/doc-browser"
               target="_blank">
@@ -17,7 +23,9 @@
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
-      <home-view/>
+      <config-view id="config" />
+      <notify-view />
+      <router-view />
     </b-container>
   </div>
 </template>
@@ -25,14 +33,16 @@
 <script>
 import 'vue-awesome/icons/bomb';
 import 'vue-awesome/icons/github';
+import 'vue-awesome/icons/cog';
 import Icon from 'vue-awesome/components/Icon';
-import HomeView from './components/HomeView';
+import { NotifyView, ConfigView } from './shared/components';
 
 export default {
   name: 'app',
   components: {
     Icon,
-    HomeView,
+    NotifyView,
+    ConfigView,
   },
 };
 </script>

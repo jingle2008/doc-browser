@@ -24,7 +24,7 @@
 import 'vue-awesome/icons/chevron-circle-down';
 import 'vue-awesome/icons/chevron-circle-right';
 import Icon from 'vue-awesome/components/Icon';
-import mixins from './mixins';
+import { guid } from '../../../utils/common';
 
 export default {
   name: 'CollapseView',
@@ -59,6 +59,10 @@ export default {
   components: {
     Icon,
   },
-  mixins: [mixins],
+  mixins: [{
+    methods: {
+      guid,
+    },
+  }],
 };
 </script>
