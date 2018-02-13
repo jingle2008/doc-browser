@@ -6,6 +6,7 @@
       @input="textChanged"
       :state="state"
       rows="25"
+      max-rows="32"
       @dragenter.native.stop.prevent
       @dragover.native.stop.prevent
       @drop.native.stop.prevent="drop" />

@@ -58,10 +58,7 @@ export default {
           this.jsonUrl, { mode: 'cors' });
         this.json = await res.json();
       } catch (error) {
-        this.json = {
-          name: error.name,
-          message: error.message,
-        };
+        this.json = error;
       }
     },
   },
