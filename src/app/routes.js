@@ -1,3 +1,3 @@
-import { routes as viewer } from './viewer';
+import viewer from './viewer';
 
 export default [...viewer];
