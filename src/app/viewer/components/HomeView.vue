@@ -97,7 +97,6 @@
       footer-bg-variant="dark"
       footer-text-variant="light"
       :ok-disabled="$v.url.$invalid"
-      @show="remoteInit($v.result)"
       @ok="remoteConfirm">
       <b-form
         ref="remoteform"
@@ -157,6 +156,7 @@ import EditorView from './EditorView';
 
 export default {
   name: 'HomeView',
+  props: ['doc'],
   data() {
     return {
       editing: true,
@@ -166,8 +166,14 @@ export default {
       url: null,
       showProgress: false,
       loadingProgress: 0,
-      totalProgress: 0,
+      totalProgress: 100,
     };
+  },
+  created() {
+    this.fetchJson();
+  },
+  watch: {
+    $route: 'fetchJson',
   },
   methods: {
     ...mapActions([
@@ -197,12 +203,12 @@ export default {
       this.updateProgress();
     },
     browseLocal() {
-      this.$refs.fileinput.reset();
-      this.$refs.fileinput.$el.click();
-    },
-    remoteInit(validation) {
-      this.url = null;
-      validation.$reset();
+      if (this.doc) {
+        this.$router.push({ name: 'DocBrowser' });
+      } else {
+        this.$refs.fileinput.reset();
+        this.$refs.fileinput.$el.click();
+      }
     },
     showLoading(total) {
       this.totalProgress = total;
@@ -221,24 +227,35 @@ export default {
         }, 1000);
       }
     },
-    async remoteConfirm() {
-      this.showLoading(2);
+    async fetchJson() {
+      if (this.doc) {
+        this.showLoading(2);
 
-      try {
-        const res = await fetch(this.jsonUrl, { mode: 'cors' });
-        this.updateProgress();
-        if (res.ok) {
-          this.dataChanged(await res.text());
-          this.notify();
+        try {
+          const res = await fetch(this.jsonUrl, { mode: 'cors' });
           this.updateProgress();
-        } else {
+          if (res.ok) {
+            this.dataChanged(await res.text());
+            this.notify();
+            this.updateProgress();
+            return;
+          }
+
           throw new Error(res.statusText);
+        } catch (error) {
+          this.updateProgress(this.totalProgress);
+          this.notify(
+            `Error fetching document '${this.jsonUrl}': ${error}`);
         }
-      } catch (error) {
-        this.updateProgress(this.totalProgress);
-        this.notify(
-          `Error fetching document '${this.jsonUrl}': ${error}`);
       }
+
+      this.dataChanged('');
+    },
+    remoteConfirm() {
+      this.$router.push({
+        name: 'DocBrowser',
+        params: { doc: this.url },
+      });
     },
   },
   computed: {
@@ -265,8 +282,8 @@ export default {
     },
     jsonUrl() {
       return this.enable
-        ? this.format(this.urlTemplate, this.url)
-        : this.url;
+        ? this.format(this.urlTemplate, this.doc)
+        : this.doc;
     },
   },
   components: {
