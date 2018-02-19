@@ -8,6 +8,7 @@ const state = {
     prefix: null,
     suffix: null,
     idProp: null,
+    pathFn: null,
   },
 };
 
@@ -19,11 +20,12 @@ const getters = {
   prefix: state => state.link.prefix,
   suffix: state => state.link.suffix,
   idProp: state => state.link.idProp,
+  pathFn: state => state.link.pathFn,
 };
 
 const actions = {
   notify({ commit }, message) {
-    commit('notify', { message });
+    commit('notify', message);
   },
 
   enableLink({ commit }, { prefix, suffix, idProp }) {
@@ -32,10 +34,13 @@ const actions = {
   disableLink({ commit }) {
     commit('disableLink');
   },
+  setPathFn({ commit }, pathFn) {
+    commit('setPathFn', pathFn);
+  },
 };
 
 const mutations = {
-  notify(state, { message }) {
+  notify(state, message) {
     state.notify.visible = !!message;
     state.notify.message = message;
   },
@@ -48,6 +53,9 @@ const mutations = {
   },
   disableLink(state) {
     state.link.enable = false;
+  },
+  setPathFn(state, pathFn) {
+    state.link.pathFn = pathFn;
   },
 };
 

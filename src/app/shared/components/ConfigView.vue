@@ -98,7 +98,6 @@ export default {
       validation.$reset();
     },
     async confirm() {
-      // TODO: save prefix, suffix and idField
       if (this.result.enable) {
         this.enableLink(this.result);
       } else {

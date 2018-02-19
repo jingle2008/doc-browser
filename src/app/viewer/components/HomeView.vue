@@ -171,13 +171,23 @@ export default {
   },
   created() {
     this.fetchJson();
+    this.setPathFn(this.externalUrl);
   },
   watch: {
     $route: 'fetchJson',
   },
   methods: {
+    externalUrl(urlPart) {
+      const result = this.$router.resolve({
+        name: 'DocBrowser',
+        params: { doc: urlPart },
+      });
+
+      return result.href;
+    },
     ...mapActions([
       'notify',
+      'setPathFn',
     ]),
     dataChanged(value) {
       this.text = value;
