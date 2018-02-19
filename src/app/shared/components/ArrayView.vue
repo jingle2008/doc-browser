@@ -16,37 +16,39 @@
       :keyword.sync="keyword"
       :columns="fieldNames"
       @update:filterColumns="onFieldsFiltered" />
-    <b-table
-      v-if="fields.length"
-      :items="items"
-      :fields="fields"
-      :filter="keyword"
-      bordered
-      head-variant="light"
-      :current-page="currentPage"
-      :per-page="complex ? perPage : 0"
-      show-empty
-      @filtered="onItemsFiltered">
-      <template
-        v-for="(field, index) in fields"
-        :slot="field.key"
-        slot-scope="data">
-        <any-view
-          :data="data.value"
-          :key="index"
-          :property="field.key" />
-      </template>
-      <template
-        v-if="lineNo"
-        slot="index"
-        slot-scope="data">
-        {{ items.indexOf(data.item) + 1 }}
-      </template>
-    </b-table>
-    <b-alert
-      v-else
-      variant="warning"
-      show>There are no columns selected.</b-alert>
+    <transition name="zoom" mode="out-in">
+      <b-table
+        v-if="fields.length"
+        :items="items"
+        :fields="fields"
+        :filter="keyword"
+        bordered
+        head-variant="light"
+        :current-page="currentPage"
+        :per-page="complex ? perPage : 0"
+        show-empty
+        @filtered="onItemsFiltered">
+        <template
+          v-for="(field, index) in fields"
+          :slot="field.key"
+          slot-scope="data">
+          <any-view
+            :data="data.value"
+            :key="index"
+            :property="field.key" />
+        </template>
+        <template
+          v-if="lineNo"
+          slot="index"
+          slot-scope="data">
+          {{ items.indexOf(data.item) + 1 }}
+        </template>
+      </b-table>
+      <b-alert
+        v-else
+        variant="warning"
+        show>There are no columns selected.</b-alert>
+    </transition>
   </collapse-view>
 </template>
 

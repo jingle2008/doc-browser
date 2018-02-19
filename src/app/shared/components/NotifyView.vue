@@ -1,21 +1,23 @@
 <template>
-  <b-alert
-    :show="visible"
-    @dismissed="notify()"
-    variant="danger"
-    dismissible>
-    <h4 class="alert-heading">
-      <icon
-        name="exclamation-triangle"
-        class="align-text-bottom"
-        scale="2" />
-      Error
-    </h4>
-    <hr>
-    <p>
-      {{ message }}
-    </p>
-  </b-alert>
+  <transition name="slideDown">
+    <b-alert
+      :show="visible"
+      @dismissed="notify()"
+      variant="danger"
+      dismissible>
+      <h4 class="alert-heading">
+        <icon
+          name="exclamation-triangle"
+          class="align-text-bottom"
+          scale="2" />
+        Error
+      </h4>
+      <hr>
+      <p>
+        {{ message }}
+      </p>
+    </b-alert>
+  </transition>
 </template>
 
 <script>
