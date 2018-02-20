@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-form-textarea
+      ref="editor"
       :value="data"
       placeholder="Enter your valid json data here."
       @input="textChanged"
@@ -32,6 +33,14 @@ export default {
     };
   },
   methods: {
+    execute(command) {
+      const editor = this.$refs.editor.$el;
+      if (editor.selectionStart === editor.selectionEnd) {
+        editor.select();
+      }
+
+      document.execCommand(command);
+    },
     textChanged(value) {
       this.$emit('update:data', value);
 

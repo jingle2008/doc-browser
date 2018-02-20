@@ -47,12 +47,23 @@
             </b-button-group>
             <b-button-group
               class="mr-2">
-              <b-btn>
+              <b-btn
+                :disabled="!editing"
+                @click="execute('copy')">
                 <icon
-                  name="download"
+                  name="copy"
                   class="align-text-bottom"
                   scale="1.2" />
-                Export
+                Copy
+              </b-btn>
+              <b-btn
+                :disabled="!editing"
+                @click="execute('cut')">
+                <icon
+                  name="cut"
+                  class="align-text-bottom"
+                  scale="1.2" />
+                Cut
               </b-btn>
             </b-button-group>
             <b-button-group>
@@ -142,6 +153,7 @@
       appear>
       <keep-alive>
         <component
+          ref="main"
           :is="viewName"
           :data="viewData"
           @update:data="dataChanged"
@@ -155,7 +167,8 @@
 <script>
 import 'vue-awesome/icons/file';
 import 'vue-awesome/icons/folder-open';
-import 'vue-awesome/icons/download';
+import 'vue-awesome/icons/copy';
+import 'vue-awesome/icons/cut';
 import 'vue-awesome/icons/cloud';
 import 'vue-awesome/icons/edit';
 import 'vue-awesome/icons/th-list';
@@ -190,6 +203,9 @@ export default {
     $route: 'fetchJson',
   },
   methods: {
+    execute(command) {
+      this.$refs.main.execute(command);
+    },
     externalUrl(urlPart) {
       const result = this.$router.resolve({
         name: 'DocBrowser',
