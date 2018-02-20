@@ -21,9 +21,6 @@
                   scale="1.2" />
                 New
               </b-btn>
-            </b-button-group>
-            <b-button-group
-              class="mr-2">
               <b-btn
                 v-b-tooltip.hover
                 @click="browseLocal"
@@ -64,6 +61,25 @@
                   class="align-text-bottom"
                   scale="1.2" />
                 Cut
+              </b-btn>
+            </b-button-group>
+            <b-button-group
+              class="mr-2">
+              <b-btn
+                @click="prettify">
+                <icon
+                  name="wrench"
+                  class="align-text-bottom"
+                  scale="1.2" />
+                Prettify
+              </b-btn>
+              <b-btn
+                @click="uglify">
+                <icon
+                  name="compress"
+                  class="align-text-bottom"
+                  scale="1.2" />
+                Uglify
               </b-btn>
             </b-button-group>
             <b-button-group>
@@ -169,6 +185,8 @@ import 'vue-awesome/icons/file';
 import 'vue-awesome/icons/folder-open';
 import 'vue-awesome/icons/copy';
 import 'vue-awesome/icons/cut';
+import 'vue-awesome/icons/wrench';
+import 'vue-awesome/icons/compress';
 import 'vue-awesome/icons/cloud';
 import 'vue-awesome/icons/edit';
 import 'vue-awesome/icons/th-list';
@@ -203,6 +221,13 @@ export default {
     $route: 'fetchJson',
   },
   methods: {
+    prettify() {
+      this.text = JSON.stringify(
+        this.json, null, 2);
+    },
+    uglify() {
+      this.text = JSON.stringify(this.json);
+    },
     execute(command) {
       this.$refs.main.execute(command);
     },
