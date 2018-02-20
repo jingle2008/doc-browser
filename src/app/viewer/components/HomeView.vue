@@ -66,6 +66,7 @@
             <b-button-group
               class="mr-2">
               <b-btn
+                :disabled="!editing"
                 @click="prettify">
                 <icon
                   name="wrench"
@@ -74,6 +75,7 @@
                 Prettify
               </b-btn>
               <b-btn
+                :disabled="!editing"
                 @click="uglify">
                 <icon
                   name="compress"
@@ -270,10 +272,10 @@ export default {
       if (this.doc) {
         this.notify();
         this.$router.push({ name: 'DocBrowser' });
-      } else {
-        this.$refs.fileinput.reset();
-        this.$refs.fileinput.$el.click();
       }
+
+      this.$refs.fileinput.reset();
+      this.$refs.fileinput.$el.click();
     },
     showLoading(total) {
       this.totalProgress = total;

@@ -27,17 +27,20 @@
         class="my-0" />
     </b-col>
     <b-col sm="auto" class="mb-2">
-      <b-form-group
-        horizontal
-        class="my-0"
-        label="Page Size">
-        <b-form-radio-group
-          buttons
-          button-variant="outline-secondary"
-          :checked="pageSize"
+      <b-input-group prepend="Go to:">
+        <b-select
+          :value="current"
+          @input="changeCurrent"
+          :options="pageIndices" />
+      </b-input-group>
+    </b-col>
+    <b-col sm="auto" class="mb-2">
+      <b-input-group prepend="Page Size:">
+        <b-select
+          :value="pageSize"
           @input="changePageSize"
           :options="pageSizes" />
-      </b-form-group>
+      </b-input-group>
     </b-col>
     <b-col sm="auto" class="mb-2">
       <label class="my-2">
@@ -96,7 +99,7 @@ export default {
     pageSizes: {
       type: Array,
       default() {
-        return [10, 15, 25, 50, 100, 500];
+        return [5, 10, 25, 50, 100, 250, 500];
       },
     },
     columns: {
@@ -140,6 +143,10 @@ export default {
     },
     canFilter() {
       return this.columns && this.columns.length > 0;
+    },
+    pageIndices() {
+      const total = Math.ceil(this.total / this.pageSize);
+      return Array.from(Array(total)).map((v, i) => i + 1);
     },
   },
   components: {
