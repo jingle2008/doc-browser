@@ -8,12 +8,9 @@
           <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-navbar-brand href="/">
             <icon name="bomb" scale="2" />
+            Document Browser
           </b-navbar-brand>
           <b-collapse is-nav id="nav_collapse">
-            <b-navbar-nav>
-              <b-nav-item :to="{name: 'DocBrowser'}">Document Browser</b-nav-item>
-              <b-nav-item href="#" disabled>Javescript Playground</b-nav-item>
-            </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
               <b-nav-item v-b-modal.config>
                 <icon name="cog" scale="2" />             
