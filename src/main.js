@@ -5,7 +5,6 @@ import RavenVue from 'raven-js/plugins/vue';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import 'vue2-animate/dist/vue2-animate.min.css';
 
 import { App } from './app';
 import router from './router';

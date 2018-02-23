@@ -1,29 +1,25 @@
 <template>
   <div id="app">
     <b-container fluid>
-      <transition
-        name="slideDown"
-        appear>
-        <b-navbar toggleable="md" type="dark" variant="dark" fixed="top">
-          <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-          <b-navbar-brand href="/">
-            <icon name="bomb" scale="2" />
-            Document Browser
-          </b-navbar-brand>
-          <b-collapse is-nav id="nav_collapse">
-            <b-navbar-nav class="ml-auto">
-              <b-nav-item v-b-modal.config>
-                <icon name="cog" scale="2" />             
-              </b-nav-item>
-              <b-nav-item
-                href="https://github.com/jingle2008/doc-browser"
-                target="_blank">
-                <icon name="github" scale="2" />
-              </b-nav-item>
-            </b-navbar-nav>
-          </b-collapse>
-        </b-navbar>
-      </transition>
+      <b-navbar toggleable="md" type="dark" variant="dark" fixed="top">
+        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+        <b-navbar-brand href="/">
+          <icon name="bomb" scale="2" />
+          Document Browser
+        </b-navbar-brand>
+        <b-collapse is-nav id="nav_collapse">
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item v-b-modal.config>
+              <icon name="cog" scale="2" />       
+            </b-nav-item>
+            <b-nav-item
+              href="https://github.com/jingle2008/doc-browser"
+              target="_blank">
+              <icon name="github" scale="2" />
+            </b-nav-item>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
       <config-view id="config" />
       <notify-view />
       <router-view />

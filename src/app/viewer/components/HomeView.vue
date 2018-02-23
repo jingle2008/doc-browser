@@ -1,128 +1,121 @@
 <template>
   <div>
-    <transition
-      name="slideRight"
-      :duration="500"
-      appear>
-      <b-row
-        class="mb-2"
-        align-h="between">
-        <b-col
-          cols="9">
-          <b-button-toolbar
-            aria-label="Toolbar">
-            <b-button-group
-              class="mr-2">
-              <b-btn
-                @click="dataChanged('')">
+    <b-row
+      class="mb-2"
+      align-h="between">
+      <b-col
+        cols="9">
+        <b-button-toolbar
+          aria-label="Toolbar">
+          <b-button-group
+            class="mr-2">
+            <b-btn
+              @click="dataChanged('')">
+              <icon
+                name="file"
+                class="align-text-bottom"
+                scale="1.2" />
+              New
+            </b-btn>
+            <b-btn
+              v-b-tooltip.hover
+              @click="browseLocal"
+              title="Browse local files">
+              <icon
+                name="folder-open"
+                class="align-text-bottom"
+                scale="1.2" />
+              Open
+            </b-btn>
+            <b-btn
+              v-b-modal.remote-dialog
+              v-b-tooltip.hover
+              title="Fetch remote documents">
+              <icon
+                name="cloud"
+                class="align-text-bottom"
+                scale="1.2" />
+              Fetch
+            </b-btn>
+          </b-button-group>
+          <b-button-group
+            class="mr-2">
+            <b-btn
+              :disabled="!editing || !text"
+              @click="execute('copy')">
+              <icon
+                name="copy"
+                class="align-text-bottom"
+                scale="1.2" />
+              Copy
+            </b-btn>
+            <b-btn
+              :disabled="!editing || !text"
+              @click="execute('cut')">
+              <icon
+                name="cut"
+                class="align-text-bottom"
+                scale="1.2" />
+              Cut
+            </b-btn>
+          </b-button-group>
+          <b-button-group
+            class="mr-2">
+            <b-btn
+              :disabled="!editing || !text"
+              @click="prettify">
+              <icon
+                name="wrench"
+                class="align-text-bottom"
+                scale="1.2" />
+              Prettify
+            </b-btn>
+            <b-btn
+              :disabled="!editing || !text"
+              @click="uglify">
+              <icon
+                name="compress"
+                class="align-text-bottom"
+                scale="1.2" />
+              Uglify
+            </b-btn>
+          </b-button-group>
+          <b-button-group>
+            <b-form-radio-group
+              buttons
+              v-model="editing">
+              <b-form-radio
+                :value="true">
                 <icon
-                  name="file"
+                  name="edit"
                   class="align-text-bottom"
                   scale="1.2" />
-                New
-              </b-btn>
-              <b-btn
-                v-b-tooltip.hover
-                @click="browseLocal"
-                title="Browse local files">
+                Editing
+              </b-form-radio>
+              <b-form-radio
+                :value="false">
                 <icon
-                  name="folder-open"
+                  name="th-list"
                   class="align-text-bottom"
                   scale="1.2" />
-                Open
-              </b-btn>
-              <b-btn
-                v-b-modal.remote-dialog
-                v-b-tooltip.hover
-                title="Fetch remote documents">
-                <icon
-                  name="cloud"
-                  class="align-text-bottom"
-                  scale="1.2" />
-                Fetch
-              </b-btn>
-            </b-button-group>
-            <b-button-group
-              class="mr-2">
-              <b-btn
-                :disabled="!editing"
-                @click="execute('copy')">
-                <icon
-                  name="copy"
-                  class="align-text-bottom"
-                  scale="1.2" />
-                Copy
-              </b-btn>
-              <b-btn
-                :disabled="!editing"
-                @click="execute('cut')">
-                <icon
-                  name="cut"
-                  class="align-text-bottom"
-                  scale="1.2" />
-                Cut
-              </b-btn>
-            </b-button-group>
-            <b-button-group
-              class="mr-2">
-              <b-btn
-                :disabled="!editing"
-                @click="prettify">
-                <icon
-                  name="wrench"
-                  class="align-text-bottom"
-                  scale="1.2" />
-                Prettify
-              </b-btn>
-              <b-btn
-                :disabled="!editing"
-                @click="uglify">
-                <icon
-                  name="compress"
-                  class="align-text-bottom"
-                  scale="1.2" />
-                Uglify
-              </b-btn>
-            </b-button-group>
-            <b-button-group>
-              <b-form-radio-group
-                buttons
-                v-model="editing">
-                <b-form-radio
-                  :value="true">
-                  <icon
-                    name="edit"
-                    class="align-text-bottom"
-                    scale="1.2" />
-                  Editing
-                </b-form-radio>
-                <b-form-radio
-                  :value="false">
-                  <icon
-                    name="th-list"
-                    class="align-text-bottom"
-                    scale="1.2" />
-                  Viewer
-                </b-form-radio>
-              </b-form-radio-group>
-            </b-button-group>
-          </b-button-toolbar>
-        </b-col>
-        <b-col
-          cols="3"
-          align-self="center">
-          <transition name="fade">
-            <b-progress
-              v-if="showProgress"
-              :value="loadingProgress"
-              :max="totalProgress"
-              show-progress
-              animated
-              height="1.5rem" />
-          </transition>
-        </b-col>
-      </b-row>
-    </transition>
+                Viewer
+              </b-form-radio>
+            </b-form-radio-group>
+          </b-button-group>
+        </b-button-toolbar>
+      </b-col>
+      <b-col
+        cols="3"
+        align-self="center">
+        <b-progress
+          v-if="showProgress"
+          :value="loadingProgress"
+          :max="totalProgress"
+          show-progress
+          animated
+          height="1.5rem" />
+      </b-col>
+    </b-row>
     <b-modal
       id="remote-dialog"
       centered
@@ -164,21 +157,15 @@
       v-show="false"
       @input="loadFile"
       accept=".json" />
-    <transition
-      name="slideLeft"
-      :duration="300"
-      mode="out-in"
-      appear>
-      <keep-alive>
-        <component
-          ref="main"
-          :is="viewName"
-          :data="viewData"
-          @update:data="dataChanged"
-          @file-dropped="loadFile">
-        </component>
-      </keep-alive>
-    </transition>
+    <keep-alive>
+      <component
+        ref="main"
+        :is="viewName"
+        :data="viewData"
+        @update:data="dataChanged"
+        @file-dropped="loadFile">
+      </component>
+    </keep-alive>
   </div>
 </template>
 
