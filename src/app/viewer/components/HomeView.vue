@@ -10,7 +10,7 @@
           <b-button-group
             class="mr-2">
             <b-btn
-              @click="dataChanged('')">
+              @click="createNew">
               <icon
                 name="file"
                 class="align-text-bottom"
@@ -255,11 +255,18 @@ export default {
       reader.readAsText(value);
       this.updateProgress();
     },
-    browseLocal() {
+    createNew() {
+      this.navigateHome();
+      this.dataChanged('');
+    },
+    navigateHome() {
       if (this.doc) {
         this.notify();
         this.$router.push({ name: 'DocBrowser' });
       }
+    },
+    browseLocal() {
+      this.navigateHome();
 
       this.$refs.fileinput.reset();
       this.$refs.fileinput.$el.click();
