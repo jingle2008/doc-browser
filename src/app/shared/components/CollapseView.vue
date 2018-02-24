@@ -11,11 +11,11 @@
     </div>
     <b-collapse
       :id="id"
-      :visible="open"
+      :visible="isVisible"
       @show="toggle"
       @hide="toggle"
       class="card-body">
-      <slot />
+      <slot v-if="counter" />
     </b-collapse>
   </div>
 </template>
@@ -41,17 +41,20 @@ export default {
   data() {
     return {
       id: `collapse-view-${this.guid()}`,
-      open: this.visible,
+      counter: this.visible ? 1 : 0,
     };
   },
   methods: {
     toggle() {
-      this.open = !this.open;
+      this.counter += 1;
     },
   },
   computed: {
+    isVisible() {
+      return this.counter % 2 === 1;
+    },
     icon() {
-      return this.open
+      return this.isVisible
         ? 'chevron-circle-down'
         : 'chevron-circle-right';
     },
