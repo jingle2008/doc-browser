@@ -30,6 +30,7 @@ export default {
   },
   render(createElement) {
     const data = this.data;
+    const property = this.property;
 
     const getComponent = () => {
       if (isNull(data)) return NullView;
@@ -49,7 +50,7 @@ export default {
 
     return createElement(
       getComponent(),
-      { props: { data } },
+      { props: { data, property } },
       this.children);
   },
 };

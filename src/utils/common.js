@@ -89,7 +89,7 @@ export function isLocalized(value) {
     && keys.every(key => locales.includes(key));
 }
 
-export function getEnglishString(value) {
+export function getDisplayValue(value) {
   if (!isLocalized(value)) {
     return null;
   }
