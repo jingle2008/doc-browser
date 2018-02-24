@@ -14,6 +14,7 @@
       v-if="visible"
       size="lg"
       centered
+      no-fade
       title="Localized Values"
       header-bg-variant="dark"
       header-text-variant="light"

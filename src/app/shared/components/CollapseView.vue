@@ -2,21 +2,18 @@
   <div class="card">
     <div
       class="card-header clickable"
-      v-b-toggle="id">
+      @click="toggle">
       <icon
         :name="icon"
         class="align-text-bottom"
         scale="1.3" />
       <b class="card-title">{{ header }}</b>
     </div>
-    <b-collapse
-      :id="id"
-      :visible="isVisible"
-      @show="toggle"
-      @hide="toggle"
-      class="card-body">
+    <div
+      class="card-body"
+      v-show="isVisible">
       <slot v-if="counter" />
-    </b-collapse>
+    </div>
   </div>
 </template>
 
@@ -24,7 +21,6 @@
 import 'vue-awesome/icons/chevron-circle-down';
 import 'vue-awesome/icons/chevron-circle-right';
 import Icon from 'vue-awesome/components/Icon';
-import { guid } from '../../../utils/common';
 
 export default {
   name: 'CollapseView',
@@ -40,7 +36,6 @@ export default {
   },
   data() {
     return {
-      id: `collapse-view-${this.guid()}`,
       counter: this.visible ? 1 : 0,
     };
   },
@@ -62,10 +57,5 @@ export default {
   components: {
     Icon,
   },
-  mixins: [{
-    methods: {
-      guid,
-    },
-  }],
 };
 </script>
