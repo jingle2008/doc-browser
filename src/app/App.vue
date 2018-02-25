@@ -22,6 +22,7 @@
       </b-navbar>
       <config-view id="config" />
       <notify-view />
+      <loading-view />
       <router-view />
     </b-container>
   </div>
@@ -32,7 +33,7 @@ import 'vue-awesome/icons/bomb';
 import 'vue-awesome/icons/github';
 import 'vue-awesome/icons/cog';
 import Icon from 'vue-awesome/components/Icon';
-import { NotifyView, ConfigView } from './shared/components';
+import { NotifyView, ConfigView, LoadingView } from './shared/components';
 
 export default {
   name: 'app',
@@ -40,6 +41,7 @@ export default {
     Icon,
     NotifyView,
     ConfigView,
+    LoadingView,
   },
 };
 </script>

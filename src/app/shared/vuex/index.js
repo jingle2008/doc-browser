@@ -3,6 +3,10 @@ const state = {
     visible: false,
     message: null,
   },
+  loading: {
+    visible: false,
+    status: null,
+  },
   link: {
     enable: false,
     prefix: null,
@@ -15,6 +19,9 @@ const state = {
 const getters = {
   visible: state => state.notify.visible,
   message: state => state.notify.message,
+
+  loading: state => state.loading.visible,
+  status: state => state.loading.status,
 
   enable: state => state.link.enable,
   prefix: state => state.link.prefix,
@@ -37,6 +44,10 @@ const actions = {
   setPathFn({ commit }, pathFn) {
     commit('setPathFn', pathFn);
   },
+
+  loadSpinner({ commit }, status) {
+    commit('loadSpinner', status);
+  },
 };
 
 const mutations = {
@@ -56,6 +67,13 @@ const mutations = {
   },
   setPathFn(state, pathFn) {
     state.link.pathFn = pathFn;
+  },
+
+  loadSpinner(state, status) {
+    state.loading.visible = !!status;
+    if (state.loading.visible) {
+      state.loading.status = status;
+    }
   },
 };
 

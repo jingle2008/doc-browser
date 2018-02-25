@@ -4,7 +4,7 @@
       class="mb-2"
       align-h="between">
       <b-col
-        cols="9">
+        md="9">
         <b-button-toolbar
           aria-label="Toolbar">
           <b-button-group
@@ -105,15 +105,19 @@
         </b-button-toolbar>
       </b-col>
       <b-col
-        cols="3"
+        md="3"
         align-self="center">
-        <b-progress
-          v-if="showProgress"
-          :value="loadingProgress"
-          :max="totalProgress"
-          show-progress
-          animated
-          height="1.5rem" />
+        <b-input-group>
+          <b-input-group-text slot="prepend">
+            <icon
+              name="eye"
+              class="align-text-bottom"
+              scale="1.2" />
+          </b-input-group-text>
+          <b-form-input
+            readonly
+            :value="identity" />
+        </b-input-group>
       </b-col>
     </b-row>
     <b-modal
@@ -126,7 +130,9 @@
       footer-bg-variant="dark"
       footer-text-variant="light"
       :ok-disabled="$v.url.$invalid"
-      @ok="remoteConfirm">
+      @hidden="remoteConfirm"
+      @show="confirmed = false"
+      @ok="confirmed = true">
       <b-form
         ref="remoteform"
         novalidate
@@ -179,6 +185,7 @@ import 'vue-awesome/icons/compress';
 import 'vue-awesome/icons/cloud';
 import 'vue-awesome/icons/edit';
 import 'vue-awesome/icons/th-list';
+import 'vue-awesome/icons/eye';
 import Icon from 'vue-awesome/components/Icon';
 import { mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
@@ -197,9 +204,8 @@ export default {
       json: null,
       file: null,
       url: null,
-      showProgress: false,
-      loadingProgress: 0,
-      totalProgress: 100,
+      identity: 'Untitled',
+      confirmed: false,
     };
   },
   created() {
@@ -211,11 +217,19 @@ export default {
   },
   methods: {
     prettify() {
-      this.text = JSON.stringify(
-        this.json, null, 2);
+      this.loadSpinner('Prettifying Json ...');
+      setTimeout(() => {
+        this.text = JSON.stringify(
+            this.json, null, 2);
+        this.loadSpinner();
+      }, 0);
     },
     uglify() {
-      this.text = JSON.stringify(this.json);
+      this.loadSpinner('Uglifying Json ...');
+      setTimeout(() => {
+        this.text = JSON.stringify(this.json);
+        this.loadSpinner();
+      }, 0);
     },
     execute(command) {
       this.$refs.main.execute(command);
@@ -231,6 +245,7 @@ export default {
     ...mapActions([
       'notify',
       'setPathFn',
+      'loadSpinner',
     ]),
     dataChanged(value) {
       this.text = value;
@@ -244,26 +259,29 @@ export default {
     loadFile(value) {
       if (!value) return;
 
-      this.showLoading(2);
+      this.identity = value.name;
+      this.loadSpinner(
+        `Loading file "${this.identity}"...`);
 
       const reader = new FileReader();
       reader.onload = (e) => {
         this.dataChanged(e.target.result);
-        this.updateProgress();
+        this.loadSpinner();
       };
-
       reader.readAsText(value);
-      this.updateProgress();
     },
     createNew() {
       this.navigateHome();
       this.dataChanged('');
+      this.identity = 'Untitled';
     },
     navigateHome() {
       if (this.doc) {
         this.notify();
         this.$router.push({ name: 'DocBrowser' });
       }
+
+      this.file = null;
     },
     browseLocal() {
       this.navigateHome();
@@ -271,48 +289,34 @@ export default {
       this.$refs.fileinput.reset();
       this.$refs.fileinput.$el.click();
     },
-    showLoading(total) {
-      this.totalProgress = total;
-      this.loadingProgress = 0;
-      this.showProgress = true;
-    },
-    updateProgress(progress = 1) {
-      this.loadingProgress = Math.min(
-        this.loadingProgress + progress,
-        this.totalProgress);
-
-      if (this.loadingProgress >= this.totalProgress) {
-        setTimeout(() => {
-          this.showProgress = false;
-          this.loadingProgress = 0;
-        }, 1000);
-      }
-    },
     async fetchJson() {
       if (this.doc) {
-        this.showLoading(2);
+        this.identity = this.jsonUrl;
+        this.loadSpinner(
+          `Fetching doucment "${this.identity}"...`);
 
         try {
           const res = await fetch(this.jsonUrl, { mode: 'cors' });
-          this.updateProgress();
           if (res.ok) {
             this.dataChanged(await res.text());
             this.notify();
-            this.updateProgress();
             return;
           }
 
           throw new Error(res.statusText);
         } catch (error) {
-          this.updateProgress(this.totalProgress);
           this.notify(
             `Error fetching document '${this.jsonUrl}': ${error}`);
+        } finally {
+          this.loadSpinner();
         }
       }
 
       this.dataChanged('');
     },
     remoteConfirm() {
+      if (!this.confirmed) return;
+
       this.$router.push({
         name: 'DocBrowser',
         params: { doc: this.url },
