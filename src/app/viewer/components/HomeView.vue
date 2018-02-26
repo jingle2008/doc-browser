@@ -40,23 +40,32 @@
           </b-button-group>
           <b-button-group
             class="mr-2">
+            <b-dropdown
+              :disabled="!editing">
+              <template slot="button-content">
+                <icon
+                  name="text-height"
+                  class="align-text-bottom"
+                  scale="1.2" />
+                Font Size
+              </template>
+              <b-dropdown-item-button
+                v-for="size in fontSizes"
+                :key="size"
+                :disabled="size === fontSize"
+                @click="fontSize = size">
+                {{ size }}
+              </b-dropdown-item-button>
+            </b-dropdown>
             <b-btn
-              :disabled="!editing || !text"
-              @click="execute('copy')">
+              :disabled="!editing"
+              :pressed="wordWrap"
+              @click="wordWrap = !wordWrap">
               <icon
-                name="copy"
+                name="paragraph"
                 class="align-text-bottom"
                 scale="1.2" />
-              Copy
-            </b-btn>
-            <b-btn
-              :disabled="!editing || !text"
-              @click="execute('cut')">
-              <icon
-                name="cut"
-                class="align-text-bottom"
-                scale="1.2" />
-              Cut
+              Word Wrap
             </b-btn>
           </b-button-group>
           <b-button-group
@@ -168,6 +177,8 @@
         ref="main"
         :is="viewName"
         :data="viewData"
+        :font-size="fontSize"
+        :word-wrap="wordWrap"
         @update:data="dataChanged"
         @file-dropped="loadFile">
       </component>
@@ -178,8 +189,8 @@
 <script>
 import 'vue-awesome/icons/file';
 import 'vue-awesome/icons/folder-open';
-import 'vue-awesome/icons/copy';
-import 'vue-awesome/icons/cut';
+import 'vue-awesome/icons/paragraph';
+import 'vue-awesome/icons/text-height';
 import 'vue-awesome/icons/wrench';
 import 'vue-awesome/icons/compress';
 import 'vue-awesome/icons/cloud';
@@ -206,6 +217,11 @@ export default {
       url: null,
       identity: 'Untitled',
       confirmed: false,
+      fontSize: 14,
+      fontSizes: [
+        8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 60, 72, 96,
+      ],
+      wordWrap: false,
     };
   },
   created() {
@@ -230,9 +246,6 @@ export default {
         this.text = JSON.stringify(this.json);
         this.loadSpinner();
       }, 0);
-    },
-    execute(command) {
-      this.$refs.main.execute(command);
     },
     externalUrl(urlPart) {
       const result = this.$router.resolve({
@@ -259,6 +272,8 @@ export default {
     loadFile(value) {
       if (!value) return;
 
+      // eslint-disable-next-line
+      console.log(value.type);
       this.identity = value.name;
       this.loadSpinner(
         `Loading file "${this.identity}"...`);

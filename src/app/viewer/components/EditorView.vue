@@ -1,16 +1,11 @@
 <template>
   <div>
-    <b-form-textarea
+    <codemirror
       ref="editor"
       :value="data"
-      placeholder="Enter your valid json data here."
-      @input="textChanged"
-      :state="state"
-      rows="25"
-      max-rows="32"
-      @dragenter.native.stop.prevent
-      @dragover.native.stop.prevent
-      @drop.native.stop.prevent="drop" />
+      :options="cmOptions"
+      @input="textChanged">
+    </codemirror>
     <b-form-text>
       {{ error }}
     </b-form-text>
@@ -18,6 +13,27 @@
 </template>
 
 <script>
+import { codemirror } from 'vue-codemirror';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/edit/matchbrackets';
+import 'codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/dialog/dialog';
+import 'codemirror/addon/dialog/dialog.css';
+import 'codemirror/addon/search/searchcursor';
+import 'codemirror/addon/search/search';
+import 'codemirror/addon/selection/active-line';
+import 'codemirror/addon/search/matchesonscrollbar';
+import 'codemirror/addon/search/matchesonscrollbar.css';
+import 'codemirror/addon/fold/foldgutter.css';
+import 'codemirror/addon/fold/foldgutter';
+import 'codemirror/addon/fold/foldcode';
+import 'codemirror/addon/fold/brace-fold';
+import 'codemirror/addon/scroll/annotatescrollbar';
+import 'codemirror/addon/scroll/simplescrollbars';
+import 'codemirror/addon/scroll/simplescrollbars.css';
+import 'codemirror/addon/display/placeholder';
+
 export default {
   name: 'EditorView',
   props: {
@@ -25,21 +41,63 @@ export default {
       type: String,
       required: true,
     },
+    fontSize: {
+      type: Number,
+    },
+    wordWrap: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       state: null,
       error: null,
+      cmOptions: {
+        mode: 'text/javascript',
+        lineNumbers: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        styleActiveLine: true,
+        showMatchesOnScrollbar: true,
+        foldGutter: true,
+        gutters: [
+          'CodeMirror-linenumbers',
+          'CodeMirror-foldgutter',
+        ],
+        placeholder: 'Enter your valid json here.',
+        scrollbarStyle: 'simple',
+      },
     };
   },
-  methods: {
-    execute(command) {
-      const editor = this.$refs.editor.$el;
-      if (editor.selectionStart === editor.selectionEnd) {
-        editor.select();
-      }
+  mounted() {
+    this.codemirror.setSize(null, 800);
 
-      document.execCommand(command);
+    if (this.fontSize) {
+      this.setFontSize();
+    }
+
+    this.setWordWrap();
+  },
+  computed: {
+    codemirror() {
+      return this.$refs.editor.codemirror;
+    },
+  },
+  watch: {
+    fontSize: 'setFontSize',
+    wordWrap: 'setWordWrap',
+  },
+  methods: {
+    setFontSize() {
+      this.codemirror.getWrapperElement()
+        .style['font-size'] = `${this.fontSize}px`;
+      this.codemirror.refresh();
+    },
+    setWordWrap() {
+      this.codemirror.setOption(
+        'lineWrapping', this.wordWrap);
+      this.codemirror.refresh();
     },
     textChanged(value) {
       this.$emit('update:data', value);
@@ -65,5 +123,24 @@ export default {
       this.$emit('file-dropped', file);
     },
   },
+  components: {
+    codemirror,
+  },
 };
 </script>
+
+<style>
+  .CodeMirror {
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+  }
+  .CodeMirror pre.CodeMirror-placeholder {
+    color: #999;
+  }
+  .CodeMirror-simplescroll-horizontal {
+    height: 16px;
+  }
+  .CodeMirror-simplescroll-vertical {
+    width: 16px;
+  }
+</style>
