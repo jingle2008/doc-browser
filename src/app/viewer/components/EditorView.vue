@@ -34,6 +34,14 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 import 'codemirror/addon/display/placeholder';
 
+function tabWithSpace(cm) {
+  if (cm.somethingSelected()) {
+    cm.indentSelection('add');
+  } else {
+    cm.execCommand('insertSoftTab');
+  }
+}
+
 export default {
   name: 'EditorView',
   props: {
@@ -54,7 +62,11 @@ export default {
       state: null,
       error: null,
       cmOptions: {
-        mode: 'text/javascript',
+        mode: {
+          name: 'javascript',
+          json: true,
+        },
+        tabSize: 2,
         lineNumbers: true,
         matchBrackets: true,
         autoCloseBrackets: true,
@@ -67,6 +79,10 @@ export default {
         ],
         placeholder: 'Enter your valid json here.',
         scrollbarStyle: 'simple',
+        extraKeys: {
+          Tab: tabWithSpace,
+          'Shift-Tab': cm => cm.indentSelection('subtract'),
+        },
       },
     };
   },
