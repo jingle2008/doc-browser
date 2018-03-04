@@ -1,15 +1,10 @@
 <template>
-  <div>
-    <codemirror
-      ref="editor"
-      :value="data"
-      :options="cmOptions"
-      @input="textChanged">
-    </codemirror>
-    <b-form-text>
-      {{ error }}
-    </b-form-text>
-  </div>
+  <codemirror
+    ref="editor"
+    :value="data"
+    :options="cmOptions"
+    @input="textChanged">
+  </codemirror>
 </template>
 
 <script>
@@ -59,8 +54,6 @@ export default {
   },
   data() {
     return {
-      state: null,
-      error: null,
       cmOptions: {
         mode: {
           name: 'javascript',
@@ -117,22 +110,6 @@ export default {
     },
     textChanged(value) {
       this.$emit('update:data', value);
-
-      try {
-        let json = null;
-        if (value) {
-          json = JSON.parse(value);
-          this.state = true;
-        } else {
-          this.state = null;
-        }
-
-        this.error = '';
-        this.$emit('update:json', json);
-      } catch (error) {
-        this.state = false;
-        this.error = error.message;
-      }
     },
     drop(e) {
       const file = e.dataTransfer.files[0];

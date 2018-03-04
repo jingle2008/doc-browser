@@ -4,7 +4,7 @@
       class="mb-2"
       align-h="between">
       <b-col
-        md="9">
+        md="auto">
         <b-button-toolbar
           aria-label="Toolbar">
           <b-button-group
@@ -114,19 +114,17 @@
         </b-button-toolbar>
       </b-col>
       <b-col
-        md="3"
+        md="auto"
         align-self="center">
-        <b-input-group>
-          <b-input-group-text slot="prepend">
-            <icon
-              name="eye"
-              class="align-text-bottom"
-              scale="1.2" />
-          </b-input-group-text>
-          <b-form-input
-            readonly
-            :value="identity" />
-        </b-input-group>
+        <b-btn
+          variant="danger"
+          v-if="jsonError">
+          <icon
+            name="eye"
+            class="align-text-bottom"
+            scale="1.2" />
+          {{ jsonError }}
+        </b-btn>
       </b-col>
     </b-row>
     <b-modal
@@ -215,7 +213,7 @@ export default {
       json: null,
       file: null,
       url: null,
-      identity: 'Untitled',
+      jsonError: null,
       confirmed: false,
       fontSize: 14,
       fontSizes: [
@@ -265,18 +263,16 @@ export default {
 
       try {
         this.json = value ? JSON.parse(value) : null;
+        this.jsonError = null;
       } catch (error) {
-        // eslint-disable-next-line
+        this.jsonError = error.message;
       }
     },
     loadFile(value) {
       if (!value) return;
 
-      // eslint-disable-next-line
-      console.log(value.type);
-      this.identity = value.name;
       this.loadSpinner(
-        `Loading file "${this.identity}"...`);
+        `Loading file "${value.name}"...`);
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -288,7 +284,6 @@ export default {
     createNew() {
       this.navigateHome();
       this.dataChanged('');
-      this.identity = 'Untitled';
     },
     navigateHome() {
       if (this.doc) {
@@ -306,9 +301,8 @@ export default {
     },
     async fetchJson() {
       if (this.doc) {
-        this.identity = this.jsonUrl;
         this.loadSpinner(
-          `Fetching doucment "${this.identity}"...`);
+          `Fetching doucment "${this.jsonUrl}"...`);
 
         try {
           const res = await fetch(this.jsonUrl, { mode: 'cors' });
