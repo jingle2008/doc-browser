@@ -123,17 +123,11 @@ export default {
 </script>
 
 <style>
-  .CodeMirror {
-    border-top: 1px solid silver;
-    border-bottom: 1px solid silver;
-  }
-  .CodeMirror pre.CodeMirror-placeholder {
-    color: #999;
-  }
-  .CodeMirror-simplescroll-horizontal {
-    height: 16px;
-  }
-  .CodeMirror-simplescroll-vertical {
-    width: 16px;
-  }
+.CodeMirror {
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+}
+.CodeMirror pre.CodeMirror-placeholder {
+  color: #999;
+}
 </style>
