@@ -9,7 +9,8 @@ import ExternalView from './ExternalView';
 import DefaultView from './DefaultView';
 import NullView from './NullView';
 import ErrorView from './ErrorView';
-import { isNull, isBoolean, isString, isLocalized, isObject, isArray, isError } from '../../../utils/common';
+import UndefinedView from './UndefinedView';
+import { isNull, isUndefined, isBoolean, isString, isLocalized, isObject, isArray, isError } from '../../../utils/common';
 
 export default {
   name: 'AnyView',
@@ -34,6 +35,7 @@ export default {
 
     const getComponent = () => {
       if (isNull(data)) return NullView;
+      if (isUndefined(data)) return UndefinedView;
       if (this.enable
         && this.idProp === this.property) {
         return ExternalView;

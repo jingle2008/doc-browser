@@ -13,3 +13,4 @@ export { default as StringView } from './StringView';
 export { default as NotifyView } from './NotifyView';
 export { default as ConfigView } from './ConfigView';
 export { default as LoadingView } from './LoadingView';
+export { default as UndefinedView } from './UndefinedView';

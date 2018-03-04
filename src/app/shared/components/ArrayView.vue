@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import AnyView from './AnyView';
 import FilterView from './FilterView';
 import CollapseView from './CollapseView';
@@ -119,8 +120,15 @@ export default {
 
       return true;
     },
+    isExternal(key) {
+      return this.enable && this.idProp === key;
+    },
   },
   computed: {
+    ...mapGetters([
+      'enable',
+      'idProp',
+    ]),
     displayHeader() {
       return `${this.header} (${this.data.length})`;
     },
@@ -143,14 +151,22 @@ export default {
       return this.data.map(value => ({ value }));
     },
     fieldDefs() {
-      const item = this.items[0];
-      const keys = Object.keys(item);
-      const results = keys.map(key => (
-        {
-          key,
-          simple: this.isSimple(item[key]),
-          // && !this.isExternal(key),
-        }));
+      const results = [];
+
+      this.items.forEach((item) => {
+        Object.keys(item).forEach((key) => {
+          const simple = this.isSimple(item[key])
+            && !this.isExternal(key);
+
+          const match = results
+            .find(d => d.key === key);
+          if (!match) {
+            results.push({ key, simple });
+          } else {
+            match.simple = match.simple && simple;
+          }
+        });
+      });
 
       if (this.lineNo) {
         results.unshift({ key: 'index' });
