@@ -3311,8 +3311,8 @@ engine.io-parser@~5.2.1:
   resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.2.3.tgz#00dc5b97b1f233a23c9398d0209504cf5f94d92f"
 
 engine.io@~6.6.0:
-  version "6.6.8"
-  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.6.8.tgz#52c43629964fb9d84bf991e0e34e3c28d4e0d3e0"
+  version "6.6.9"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.6.9.tgz#fd17e9f4e3a256423592574b60ac262e91af4b82"
   dependencies:
     "@types/cors" "^2.8.12"
     "@types/node" ">=10.0.0"
@@ -3323,7 +3323,7 @@ engine.io@~6.6.0:
     cors "~2.8.5"
     debug "~4.4.1"
     engine.io-parser "~5.2.1"
-    ws "~8.20.1"
+    ws "~8.21.0"
 
 enhanced-resolve@4.1.0:
   version "4.1.0"
@@ -7937,11 +7937,11 @@ sntp@2.x.x:
     hoek "4.x.x"
 
 socket.io-adapter@~2.5.2:
-  version "2.5.7"
-  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.7.tgz#463428625f55be6f2f784a4501013b71454c0761"
+  version "2.5.8"
+  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.5.8.tgz#c9fcabf602dbd5b09258ca98e5ec6a7ae4360698"
   dependencies:
     debug "~4.4.1"
-    ws "~8.20.1"
+    ws "~8.21.0"
 
 socket.io-parser@~4.2.4:
   version "4.2.6"
@@ -9129,14 +9129,14 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
 ws@^6.0.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.5.tgz#62a472481a10629989009e720af28431e7c2ba21"
   dependencies:
     async-limiter "~1.0.0"
 
-ws@^8.18.0, ws@~8.20.1:
-  version "8.20.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.20.1.tgz#91a9ae2b312ccf98e0a85ec499b48cef45ab0ddb"
+ws@^8.18.0, ws@~8.21.0:
+  version "8.21.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.1.tgz#045650cd4b1207809e7547146223c3814a9af586"
 
 wsl-utils@^0.1.0:
   version "0.1.0"
