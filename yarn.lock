@@ -7427,8 +7427,8 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
 piscina@^4.3.1:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/piscina/-/piscina-4.9.3.tgz#a8df8f699f1f3721c01720d0e7dcc49e7de1fea8"
+  version "4.9.4"
+  resolved "https://registry.yarnpkg.com/piscina/-/piscina-4.9.4.tgz#1fe911df1ffe920325c24822e5d7b596833a0df7"
   optionalDependencies:
     "@napi-rs/nice" "^1.0.1"
 
